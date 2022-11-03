@@ -1,0 +1,19 @@
+<convoy-card className="p-24px mt-40px">
+	<h4 class="mb-24px">Provide your filter specifications</h4>
+	<form [formGroup]="subscriptionFilterForm" (ngSubmit)="testFilter()">
+		<div class="flex justify-end mb-24px">
+			<convoy-button size="sm" buttonType="button" className="mr-16px min-w-[130px] border border-primary-100" (clickItem)="filterSchema.emit(subscriptionFilterForm.value.schema)">Save</convoy-button>
+			<convoy-button size="sm" type="outline">Test Filter</convoy-button>
+		</div>
+		<div class="grid grid-cols-2">
+			<div class="flex flex-col w-full">
+				<label for="request" class="text-14 border-b border-b-grey-20">Event Data</label>
+				<textarea name="request" id="request" cols="30" rows="10" formControlName="request" class="bg-transparent w-full h-full mr-32px border-r border-r-grey-20 focus:outline-none"></textarea>
+			</div>
+			<div class="flex flex-col w-full">
+				<label for="request" class="text-14 border-b border-b-grey-20 pl-40px">Filter Schema</label>
+				<textarea name="schema" id="schema" cols="30" rows="10" formControlName="schema" class="bg-transparent w-full h-full ml-32px border-l border-l-grey-20 focus:outline-none"></textarea>
+			</div>
+		</div>
+	</form>
+</convoy-card>
