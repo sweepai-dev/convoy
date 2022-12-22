@@ -23,8 +23,8 @@ export type STAGES = 'setupSDK' | 'createSource' | 'createEndpoint' | 'createSub
 export class ConfigureProjectComponent implements OnInit {
 	projectStage: STAGES = 'setupSDK';
 	projectStages = [
-		{ projectStage: 'Create Endpoint', currentStage: 'pending', id: 'createEndpoint' },
 		{ projectStage: 'Create Source', currentStage: 'pending', id: 'createSource' },
+		{ projectStage: 'Create Endpoint', currentStage: 'pending', id: 'createEndpoint' },
 		{ projectStage: 'Create Subscription', currentStage: 'pending', id: 'createSubscription' }
 	];
 	projectType: 'incoming' | 'outgoing' = 'outgoing';
@@ -44,7 +44,7 @@ export class ConfigureProjectComponent implements OnInit {
 			this.projectStages = this.projectStages.filter(e => e.id !== 'createSource');
 			this.toggleActiveStage({ project: 'setupSDK' });
 		} else {
-			this.toggleActiveStage({ project: 'createEndpoint' });
+			this.toggleActiveStage({ project: 'createSource' });
 		}
 	}
 

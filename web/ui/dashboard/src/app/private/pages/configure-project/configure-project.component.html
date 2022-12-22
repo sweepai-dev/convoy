@@ -49,12 +49,9 @@
 			</div>
 		</convoy-card>
 
-		<convoy-create-source *ngIf="projectStage === 'createSource' && privateService.activeProjectDetails?.uid" (onAction)="$event?.action == 'close' ? cancel() : toggleActiveStage({ project: 'createSubscription', prevStage: 'createSource' })"></convoy-create-source>
+		<convoy-create-source *ngIf="projectStage === 'createSource' && privateService.activeProjectDetails?.uid" (onAction)="$event?.action == 'close' ? cancel() : toggleActiveStage({ project: 'createEndpoint', prevStage: 'createSource' })"></convoy-create-source>
 
-		<convoy-create-endpoint
-			*ngIf="projectStage === 'createEndpoint' && privateService.activeProjectDetails?.uid"
-			(onAction)="$event?.action == 'close' ? cancel() : toggleActiveStage({ project: projectType === 'outgoing' ? 'createSubscription' : 'createSource', prevStage: 'createEndpoint' })"
-		></convoy-create-endpoint>
+		<convoy-create-endpoint *ngIf="projectStage === 'createEndpoint' && privateService.activeProjectDetails?.uid" (onAction)="$event?.action == 'close' ? cancel() : toggleActiveStage({ project: 'createSubscription', prevStage: 'createEndpoint' })"></convoy-create-endpoint>
 
 		<convoy-create-subscription *ngIf="projectStage === 'createSubscription' && privateService.activeProjectDetails?.uid" (onAction)="onProjectOnboardingComplete()"></convoy-create-subscription>
 	</div>

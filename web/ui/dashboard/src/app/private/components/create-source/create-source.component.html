@@ -8,7 +8,8 @@
 			<convoy-input-error *ngIf="sourceForm.get('name')?.touched && sourceForm.get('name')?.invalid">Enter new source name</convoy-input-error>
 		</convoy-input-field>
 
-		<h2 class="font-semibold mb-12px">Select source type</h2>
+		<!-- temporarily disabling this until other types are available -->
+		<!-- <h2 class="font-semibold mb-12px">Select source type</h2>
 
 		<div class="grid grid-cols-2 gap-6">
 			<convoy-radio
@@ -23,7 +24,7 @@
 				[ngClass]="{ 'pointer-events-none opacity-50': sourceType.value !== 'http' }"
 				className="mb-0"
 			></convoy-radio>
-		</div>
+		</div> -->
 	</convoy-card>
 
 	<div formGroupName="verifier">
