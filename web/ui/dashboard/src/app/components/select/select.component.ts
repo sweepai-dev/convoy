@@ -86,6 +86,8 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 				}, 100);
 			}
 			if (!this.multiple) return (this.selectedValue = value);
+		} else {
+			this.selectedValue = this.value;
 		}
 	}
 

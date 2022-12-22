@@ -1,5 +1,5 @@
 <div convoy-modal position="full" [id]="'configureProjectForm'" [title]="projectType === 'outgoing' ? 'Configure Outgoing Project' : 'Configure Incoming Project'" (closeModal)="cancel()">
-	<div class="pt-40px pb-60px" modalBody>
+	<div class="pb-60px" modalBody>
 		<convoy-card className="p-30px" *ngIf="projectStage === 'setupSDK'">
 			<h2 class="font-semibold mb-8px">SDK installation</h2>
 			<p class="text-grey-60 text-14 max-w-[555px] mb-26px">Select your preffered and follow the intstructions below to install your SDK to get started.</p>
@@ -22,18 +22,8 @@
 			<sdk-documentation (onAction)="cancel()"></sdk-documentation>
 		</convoy-card>
 
-		<convoy-card className="p-24px mb-24px" *ngIf="projectStage !== 'setupSDK'">
-			<ul class="setup-steps flex items-center border-b border-b-grey-10 pb-24px">
-				<li class="mr-32px last-of-type:mr-0" *ngFor="let stage of projectStages">
-					<div>
-						<div class="h-4px w-240px" [class]="stage.currentStage === 'current' ? 'bg-primary-300' : stage.currentStage === 'done' ? 'bg-primary-100' : 'bg-primary-500'"></div>
-						<div class="mt-4px flex items-center">
-							<div class="m-0 w-16px h-16px border-[5px] rounded-[50px]" [class]="stage.currentStage === 'current' ? 'border-primary-300' : stage.currentStage === 'done' ? 'border-primary-100' : 'border-primary-500'"></div>
-							<div class="ml-8px text-14 font-medium" [class]="stage.currentStage === 'current' ? 'text-grey-40' : stage.currentStage === 'done' ? 'text-black' : 'text-grey-40'">{{ stage.projectStage }}</div>
-						</div>
-					</div>
-				</li>
-			</ul>
+		<!-- <convoy-card className="p-24px mb-24px" *ngIf="projectStage !== 'setupSDK'">
+
 
 			<div *ngIf="projectStage === 'createSource'">
 				<h2 class="mt-24px font-semibold">Create your first source</h2>
@@ -47,12 +37,23 @@
 				<h2 class="mt-24px font-semibold">Create your first subscription</h2>
 				<p class="text-14 text-grey-40 mt-8px w-4/5">Create a subscription that'll listen to events from your source</p>
 			</div>
-		</convoy-card>
+		</convoy-card> -->
 
-		<convoy-create-source *ngIf="projectStage === 'createSource' && privateService.activeProjectDetails?.uid" (onAction)="$event?.action == 'close' ? cancel() : toggleActiveStage({ project: 'createEndpoint', prevStage: 'createSource' })"></convoy-create-source>
+		<ng-container *ngIf="privateService.activeProjectDetails?.uid">
+			<convoy-create-source format="short" (onAction)="$event?.action == 'close' ? cancel() : toggleActiveStage({ project: 'createEndpoint', prevStage: 'createSource' })"></convoy-create-source>
 
-		<convoy-create-endpoint *ngIf="projectStage === 'createEndpoint' && privateService.activeProjectDetails?.uid" (onAction)="$event?.action == 'close' ? cancel() : toggleActiveStage({ project: 'createSubscription', prevStage: 'createEndpoint' })"></convoy-create-endpoint>
+			<convoy-create-endpoint #endpointComp format="short" (onAction)="$event?.action == 'close' ? cancel() : toggleActiveStage({ project: 'createSubscription', prevStage: 'createEndpoint' })"></convoy-create-endpoint>
 
-		<convoy-create-subscription *ngIf="projectStage === 'createSubscription' && privateService.activeProjectDetails?.uid" (onAction)="onProjectOnboardingComplete()"></convoy-create-subscription>
+			<!-- <convoy-create-subscription format="short" (onAction)="onProjectOnboardingComplete()"></convoy-create-subscription> -->
+			<div class="flex justify-end mt-32px">
+				<button convoy-button class="mr-16px text-14 transition-all duration-300 hover:text-danger-100 hover:border-danger-100" fill="outline" type="button" (click)="cancel()">Discard</button>
+				<button convoy-button class="text-14" (click)="getSourceURL()">
+					{{ isSubmittingForms ? 'Getting Source URL...' : 'Get Source URL' }}
+					<svg width="24" height="24" class="ml-8px" class="fill-white-100">
+						<use xlink:href="#arrow-right-icon"></use>
+					</svg>
+				</button>
+			</div>
+		</ng-container>
 	</div>
 </div>

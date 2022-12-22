@@ -11,17 +11,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CardComponent } from 'src/app/components/card/card.component';
 import { CreateEndpointService } from './create-endpoint.service';
 import { PrivateService } from '../../private.service';
+import { ToggleComponent } from 'src/app/components/toggle/toggle.component';
 
 @Component({
 	selector: 'convoy-create-endpoint',
 	standalone: true,
-	imports: [CommonModule, ReactiveFormsModule, InputDirective, InputErrorComponent, InputFieldDirective, LabelComponent, ButtonComponent, RadioComponent, TooltipComponent, CardComponent],
+	imports: [CommonModule, ReactiveFormsModule, InputDirective, InputErrorComponent, InputFieldDirective, LabelComponent, ButtonComponent, RadioComponent, TooltipComponent, CardComponent, ToggleComponent],
 	templateUrl: './create-endpoint.component.html',
 	styleUrls: ['./create-endpoint.component.scss']
 })
 export class CreateEndpointComponent implements OnInit {
 	@Input('editMode') editMode = false;
 	@Output() onAction = new EventEmitter<any>();
+	@Input('format') format: 'short' | 'long' = 'long';
 	savingEndpoint = false;
 	isLoadingEndpointDetails = false;
 	isLoadingEndpoints = false;
@@ -44,6 +46,7 @@ export class CreateEndpointComponent implements OnInit {
 	});
 	token: string = this.route.snapshot.params.token;
 	endpointUid: string = this.route.snapshot.params.id;
+	enableMoreConfig = false;
 
 	constructor(private formBuilder: FormBuilder, private generalService: GeneralService, private createEndpointService: CreateEndpointService, private route: ActivatedRoute, private privateService: PrivateService, private router: Router) {}
 
@@ -53,6 +56,10 @@ export class CreateEndpointComponent implements OnInit {
 	}
 
 	async saveEndpoint() {
+		console.log('log');
+
+		console.log(this.addNewEndpointForm);
+
 		if (this.addNewEndpointForm.invalid) return this.addNewEndpointForm.markAsTouched();
 		this.savingEndpoint = true;
 
@@ -67,7 +74,7 @@ export class CreateEndpointComponent implements OnInit {
 			this.onAction.emit({ action: this.endpointUid && this.editMode ? 'update' : 'save', data: response.data });
 			this.addNewEndpointForm.reset();
 			this.savingEndpoint = false;
-			return;
+			return response;
 		} catch {
 			this.savingEndpoint = false;
 			return;

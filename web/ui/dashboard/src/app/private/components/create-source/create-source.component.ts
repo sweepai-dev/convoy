@@ -11,6 +11,7 @@ import { CreateSourceService } from './create-source.service';
 })
 export class CreateSourceComponent implements OnInit {
 	@Input('action') action: 'update' | 'create' = 'create';
+	@Input('format') format: 'short' | 'long' = 'long';
 	@Output() onAction = new EventEmitter<any>();
 	sourceForm: FormGroup = this.formBuilder.group({
 		name: ['', Validators.required],
@@ -40,13 +41,13 @@ export class CreateSourceComponent implements OnInit {
 		{ value: 'db_change_stream', viewValue: 'DB Change Stream (Coming Soon)', description: 'Trigger webhook event from your DB change stream' }
 	];
 	httpTypes = [
-		{ value: 'noop', viewValue: 'None' },
-		{ value: 'hmac', viewValue: 'HMAC' },
-		{ value: 'basic_auth', viewValue: 'Basic Auth' },
-		{ value: 'api_key', viewValue: 'API Key' },
-		{ value: 'github', viewValue: 'Github' },
-		{ value: 'twitter', viewValue: 'Twitter' },
-		{ value: 'shopify', viewValue: 'Shopify' }
+		{ value: 'noop', name: 'None', uid: 'noop' },
+		{ value: 'hmac', name: 'HMAC', uid: 'hmac' },
+		{ value: 'basic_auth', name: 'Basic Auth', uid: 'basic_auth' },
+		{ value: 'api_key', name: 'API Key', uid: 'api_key' },
+		{ value: 'github', name: 'Github', uid: 'github' },
+		{ value: 'twitter', name: 'Twitter', uid: 'twitter' },
+		{ value: 'shopify', name: 'Shopify', uid: 'shopify' }
 	];
 	encodings = ['base64', 'hex'];
 	hashAlgorithms = ['SHA256', 'SHA512'];
@@ -73,6 +74,10 @@ export class CreateSourceComponent implements OnInit {
 		}
 	}
 
+	seeValue(value: any) {
+		console.log(value);
+	}
+
 	async saveSource() {
 		const verifierType = this.sourceForm.get('verifier.type')?.value;
 		const verifier = this.isCustomSource(verifierType) ? 'hmac' : verifierType;
@@ -97,6 +102,7 @@ export class CreateSourceComponent implements OnInit {
 			this.isloading = false;
 			this.onAction.emit({ action: this.action, data: response.data });
 			document.getElementById('configureProjectForm')?.scroll({ top: 0, behavior: 'smooth' });
+			return response;
 		} catch (error) {
 			this.isloading = false;
 		}

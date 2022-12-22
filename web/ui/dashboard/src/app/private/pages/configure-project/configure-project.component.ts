@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrivateService } from '../../private.service';
 import { ModalComponent } from 'src/app/components/modal/modal.component';
@@ -10,6 +10,8 @@ import { ButtonComponent } from 'src/app/components/button/button.component';
 import { GeneralService } from 'src/app/services/general/general.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateEndpointComponent } from '../../components/create-endpoint/create-endpoint.component';
+import { HTTP_RESPONSE } from 'src/app/models/http.model';
+import { CreateSourceComponent } from '../../components/create-source/create-source.component';
 
 export type STAGES = 'setupSDK' | 'createSource' | 'createEndpoint' | 'createSubscription';
 
@@ -27,15 +29,25 @@ export class ConfigureProjectComponent implements OnInit {
 		{ projectStage: 'Create Endpoint', currentStage: 'pending', id: 'createEndpoint' },
 		{ projectStage: 'Create Subscription', currentStage: 'pending', id: 'createSubscription' }
 	];
-	projectType: 'incoming' | 'outgoing' = 'outgoing';
+	projectType!: 'incoming' | 'outgoing';
 	activeProjectId = this.route.snapshot.params.id;
+	isSubmittingForms = false;
+	endpointResponse!: HTTP_RESPONSE | void;
+	@ViewChild(CreateEndpointComponent) createEndpointComp!: CreateEndpointComponent;
+	@ViewChild(CreateSourceComponent) createSourceComp!: CreateSourceComponent;
 
 	constructor(public privateService: PrivateService, private generalService: GeneralService, public router: Router, private route: ActivatedRoute) {}
 
-	ngOnInit() {
+	async ngOnInit() {
 		if (this.privateService.activeProjectDetails?.uid) {
 			this.projectType = this.privateService.activeProjectDetails?.type;
 			this.goToCurrentState(this.privateService.activeProjectDetails?.type);
+		} else {
+			await this.privateService.getProjectDetails();
+			if (this.privateService.activeProjectDetails?.uid) {
+				this.projectType = this.privateService.activeProjectDetails?.type;
+				this.goToCurrentState(this.privateService.activeProjectDetails?.type);
+			}
 		}
 	}
 
@@ -66,5 +78,14 @@ export class ConfigureProjectComponent implements OnInit {
 			});
 		}
 		window.scrollTo(0, 0);
+	}
+
+	async getSourceURL() {
+		try {
+			this.createEndpointComp.addNewEndpointForm.valid ? (this.endpointResponse = await this.createEndpointComp.saveEndpoint()) : this.createEndpointComp.addNewEndpointForm.markAllAsTouched();
+			await this.createSourceComp.saveSource();
+		} catch (error) {
+			console.log('🚀 ~ file: configure-project.component.ts:84 ~ ConfigureProjectComponent ~ getSourceURL ~ error', error);
+		}
 	}
 }

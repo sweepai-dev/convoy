@@ -55,6 +55,7 @@ export class CreateSubscriptionComponent implements OnInit {
 	isCreatingSubscription = false;
 	@Output() onAction = new EventEmitter();
 	@Input('action') action: 'update' | 'create' = 'create';
+	@Input('format') format: 'short' | 'long' = 'long';
 	projectType!: 'incoming' | 'outgoing';
 	isLoadingForm = true;
 	subscriptionId = this.route.snapshot.params.id;
