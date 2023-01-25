@@ -4,54 +4,18 @@ import (
 	"context"
 	"errors"
 	"math"
+	"time"
 
 	"github.com/frain-dev/convoy/datastore"
 	"github.com/jmoiron/sqlx"
+
+	sq "github.com/Masterminds/squirrel"
 )
 
 var (
 	ErrOrganizationNotCreated = errors.New("organization could not be created")
 	ErrOrganizationNotUpdated = errors.New("organization could not be updated")
 	ErrOrganizationNotDeleted = errors.New("organization could not be deleted")
-)
-
-const (
-	createOrganization = `
-	INSERT INTO convoy.organisations (name, owner_id)
-	VALUES ($1, $2);
-	`
-
-	fetchOrganisation = `
-	SELECT * FROM convoy.organisations 
-	WHERE $1 = $2;
-	`
-
-	fetchOrganisationsPaginated = `
-	SELECT * FROM convoy.organisations
-	ORDER BY id
-	LIMIT $1
-	OFFSET $2;
-	`
-
-	updateOrganizationById = `
-	UPDATE convoy.organisations SET
-	name = $2,
-	owner_id = $3,
-	custom_domain = $4,
-	assigned_domain = $5
-	updated_at = now()
-	WHERE id = $1;
-	`
-
-	deleteOrganisation = `
-	UPDATE convoy.organisations SET 
-	deleted_at = now()
-	WHERE id = $1;
-	`
-
-	countOrganizations = `
-	SELECT COUNT(id) FROM convoy.organisations;
-	`
 )
 
 type orgRepo struct {
@@ -63,17 +27,27 @@ func NewOrgRepo(db *sqlx.DB) datastore.OrganisationRepository {
 }
 
 func (o *orgRepo) CreateOrganisation(ctx context.Context, org *datastore.Organisation) error {
-	result, err := o.db.Exec(createOrganization, org.Name, org.OwnerID)
+	q := sq.Insert("convoy.organisations").
+		Columns("name", "owner_id").
+		Values(org.Name, org.OwnerID).
+		PlaceholderFormat(sq.Dollar)
+
+	sql, vals, err := q.ToSql()
 	if err != nil {
 		return err
 	}
 
-	rowsAffected, err := result.RowsAffected()
+	result, err := o.db.ExecContext(ctx, sql, vals...)
 	if err != nil {
 		return err
 	}
 
-	if rowsAffected < 1 {
+	nRows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if nRows < 1 {
 		return ErrOrganizationNotCreated
 	}
 
@@ -82,7 +56,22 @@ func (o *orgRepo) CreateOrganisation(ctx context.Context, org *datastore.Organis
 
 func (o *orgRepo) LoadOrganisationsPaged(ctx context.Context, pageable datastore.Pageable) ([]datastore.Organisation, datastore.PaginationData, error) {
 	skip := (pageable.Page - 1) * pageable.PerPage
-	rows, err := o.db.Queryx(fetchOrganisationsPaginated, pageable.PerPage, skip)
+
+	// TODO(raymond,daniel) implement cursor based pagination
+	q := sq.Select("*").
+		From("convoy.organisations").
+		Where("deleted_at IS NULL").
+		OrderBy("id").
+		Limit(uint64(pageable.PerPage)).
+		Offset(uint64(skip)).
+		PlaceholderFormat(sq.Dollar)
+
+	sql, vals, err := q.ToSql()
+	if err != nil {
+		return nil, datastore.PaginationData{}, err
+	}
+
+	rows, err := o.db.QueryxContext(ctx, sql, vals...)
 	if err != nil {
 		return nil, datastore.PaginationData{}, err
 	}
@@ -100,7 +89,7 @@ func (o *orgRepo) LoadOrganisationsPaged(ctx context.Context, pageable datastore
 	}
 
 	var count int
-	err = o.db.Get(&count, countOrganizations)
+	err = o.db.GetContext(ctx, &count, "SELECT COUNT(id) FROM convoy.organisations WHERE deleted_at IS NULL")
 	if err != nil {
 		return nil, datastore.PaginationData{}, err
 	}
@@ -118,17 +107,32 @@ func (o *orgRepo) LoadOrganisationsPaged(ctx context.Context, pageable datastore
 }
 
 func (o *orgRepo) UpdateOrganisation(ctx context.Context, org *datastore.Organisation) error {
-	result, err := o.db.Exec(updateOrganizationById, org.UID, org.Name, org.OwnerID, org.CustomDomain, org.AssignedDomain)
+	q := sq.Update("convoy.organisations").
+		Set("name", org.Name).
+		Set("owner_id", org.OwnerID).
+		Set("custom_domain", org.CustomDomain).
+		Set("assigned_domain", org.AssignedDomain).
+		Set("updated_at", time.Now()).
+		Where("id = ?", org.UID).
+		Where("deleted_at IS NULL").
+		PlaceholderFormat(sq.Dollar)
+
+	sql, vals, err := q.ToSql()
 	if err != nil {
 		return err
 	}
 
-	rowsAffected, err := result.RowsAffected()
+	result, err := o.db.ExecContext(ctx, sql, vals...)
 	if err != nil {
 		return err
 	}
 
-	if rowsAffected < 1 {
+	nRows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if nRows < 1 {
 		return ErrOrganizationNotUpdated
 	}
 
@@ -136,17 +140,28 @@ func (o *orgRepo) UpdateOrganisation(ctx context.Context, org *datastore.Organis
 }
 
 func (o *orgRepo) DeleteOrganisation(ctx context.Context, uid string) error {
-	result, err := o.db.Exec(deleteOrganisation, uid)
+	q := sq.Update("convoy.organisations").
+		Set("deleted_at", time.Now()).
+		Where("deleted_at IS NULL").
+		Where("id = ?", uid).
+		PlaceholderFormat(sq.Dollar)
+
+	sql, vals, err := q.ToSql()
 	if err != nil {
 		return err
 	}
 
-	rowsAffected, err := result.RowsAffected()
+	result, err := o.db.ExecContext(ctx, sql, vals...)
 	if err != nil {
 		return err
 	}
 
-	if rowsAffected < 1 {
+	nRows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if nRows < 1 {
 		return ErrOrganizationNotDeleted
 	}
 
@@ -154,30 +169,75 @@ func (o *orgRepo) DeleteOrganisation(ctx context.Context, uid string) error {
 }
 
 func (o *orgRepo) FetchOrganisationByID(ctx context.Context, id string) (*datastore.Organisation, error) {
-	var org *datastore.Organisation
-	err := o.db.QueryRowx(fetchOrganisation, "id", id).StructScan(&org)
+	q := sq.Select("*").
+		From("convoy.organisations").
+		Where("deleted_at IS NULL").
+		Where("id = ?", id).
+		PlaceholderFormat(sq.Dollar)
+
+	sql, vals, err := q.ToSql()
 	if err != nil {
 		return nil, err
+	}
+
+	var org *datastore.Organisation
+	err = o.db.QueryRowxContext(ctx, sql, vals...).StructScan(&org)
+	if err != nil {
+		return nil, err
+	}
+
+	if org == nil {
+		return nil, datastore.ErrOrgNotFound
 	}
 
 	return org, nil
 }
 
 func (o *orgRepo) FetchOrganisationByAssignedDomain(ctx context.Context, domain string) (*datastore.Organisation, error) {
-	var org *datastore.Organisation
-	err := o.db.QueryRowx(fetchOrganisation, "assigned_domain", domain).StructScan(&org)
+	q := sq.Select("*").
+		From("convoy.organisations").
+		Where("deleted_at IS NULL").
+		Where("assigned_domain = ?", domain).
+		PlaceholderFormat(sq.Dollar)
+
+	sql, vals, err := q.ToSql()
 	if err != nil {
 		return nil, err
+	}
+
+	var org *datastore.Organisation
+	err = o.db.QueryRowxContext(ctx, sql, vals...).StructScan(&org)
+	if err != nil {
+		return nil, err
+	}
+
+	if org == nil {
+		return nil, datastore.ErrOrgNotFound
 	}
 
 	return org, nil
 }
 
 func (o *orgRepo) FetchOrganisationByCustomDomain(ctx context.Context, domain string) (*datastore.Organisation, error) {
-	var org *datastore.Organisation
-	err := o.db.QueryRowx(fetchOrganisation, "custom_domain", domain).StructScan(&org)
+	q := sq.Select("*").
+		From("convoy.organisations").
+		Where("deleted_at IS NULL").
+		Where("custom_domain = ?", domain).
+		PlaceholderFormat(sq.Dollar)
+
+	sql, vals, err := q.ToSql()
 	if err != nil {
 		return nil, err
+	}
+
+	var org *datastore.Organisation
+	err = o.db.QueryRowxContext(ctx, sql, vals...).StructScan(&org)
+	if err != nil {
+		return nil, err
+	}
+
+	if org == nil {
+		return nil, datastore.ErrOrgNotFound
 	}
 
 	return org, nil

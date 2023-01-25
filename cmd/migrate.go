@@ -43,44 +43,55 @@ func addRunCommand() *cobra.Command {
 			}
 
 			o := postgres.NewOrgRepo(db.GetDB())
-			// _ = o.CreateOrganisation(cmd.Context(), &datastore.Organisation{
-			// 	OwnerID: "xxx",
-			// 	Name:    "123",
+			v := o.UpdateOrganisation(cmd.Context(), &datastore.Organisation{
+				UID:     "2",
+				OwnerID: "xxx",
+				Name:    "12323456",
+			})
+
+			// orgs, _, err := o.LoadOrganisationsPaged(cmd.Context(), datastore.Pageable{
+			// 	Page:    1,
+			// 	PerPage: 10,
 			// })
 
-			orgs, _, err := o.LoadOrganisationsPaged(cmd.Context(), datastore.Pageable{
-				Page:    1,
-				PerPage: 10,
-			})
+			// if err != nil {
+			// 	fmt.Printf("orgs: %+v", err)
+			// 	return
+			// }
 
-			if err != nil {
-				fmt.Printf("orgs: %+v", err)
-				return
-			}
+			// for _, v := range orgs {
+			fmt.Printf("Orgs: %+v\n", v)
+			// }
 
-			// fmt.Printf("org id: %+v\n", orgs[0].UID)
-			// fmt.Printf("pageable: %+v\n", pageable)
+			// p := postgres.NewProjectRepo(db.GetDB())
+			// err = p.UpdateProject(cmd.Context(), &datastore.Project{
+			// 	UID:            "1",
+			// 	Name:           "xxx-swer",
+			// 	Type:           datastore.IncomingProject,
+			// 	OrganisationID: orgs[0].UID,
+			// 	Config: &datastore.ProjectConfig{
+			// 		RateLimitCount:     1000,
+			// 		RateLimitDuration:  60,
+			// 		StrategyType:       datastore.ExponentialStrategyProvider,
+			// 		StrategyDuration:   100,
+			// 		StrategyRetryCount: 10,
+			// 		SignatureHeader:    config.DefaultSignatureHeader,
+			// 		SignatureHash:      "SHA256",
+			// 		RetentionPolicy:    "5d",
+			// 	},
+			// })
+			// if err != nil {
+			// 	fmt.Printf("err: %+v", err)
+			// 	return
+			// }
 
-			p := postgres.NewProjectRepo(db.GetDB())
-			err = p.UpdateProject(cmd.Context(), &datastore.Project{
-				Name:           "CCC",
-				Type:           datastore.IncomingProject,
-				OrganisationID: orgs[0].UID,
-				Config: &datastore.ProjectConfig{
-					RateLimitCount:     1000,
-					RateLimitDuration:  60,
-					StrategyType:       datastore.ExponentialStrategyProvider,
-					StrategyDuration:   100,
-					StrategyRetryCount: 10,
-					SignatureHeader:    config.DefaultSignatureHeader,
-					SignatureHash:      "SHA256",
-					RetentionPolicy:    "300d",
-				},
-			})
-			if err != nil {
-				fmt.Printf("err: %+v", err)
-				return
-			}
+			// proj, err := p.FetchProjectByID(cmd.Context(), 1)
+			// if err != nil {
+			// 	fmt.Printf("err: %+v", err)
+			// 	return
+			// }
+			// fmt.Printf("\n%+v\n", proj)
+			// fmt.Printf("\n%+v\n", proj.Config)
 
 			// c := postgres.NewConfigRepo(db.GetDB())
 			// err = c.UpdateConfiguration(cmd.Context(), &datastore.Configuration{
@@ -88,7 +99,7 @@ func addRunCommand() *cobra.Command {
 			// 	IsAnalyticsEnabled: true,
 			// 	IsSignupEnabled:    true,
 			// 	StoragePolicy: &datastore.StoragePolicyConfiguration{
-			// 		Type: datastore.S3,
+			// 		Type: datastore.OnPrem,
 			// 		S3: &datastore.S3Storage{
 			// 			Bucket:       null.NewString("Bucket", true),
 			// 			AccessKey:    null.NewString("AccessKey", true),
@@ -97,7 +108,7 @@ func addRunCommand() *cobra.Command {
 			// 			SessionToken: null.NewString("SessionToken", true),
 			// 			Endpoint:     null.NewString("Endpoint", true),
 			// 		},
-			// 		// OnPrem: datastore.DefaultStoragePolicy.OnPrem,
+			// 		OnPrem: datastore.DefaultStoragePolicy.OnPrem,
 			// 	},
 			// })
 			// if err != nil {
@@ -114,6 +125,7 @@ func addRunCommand() *cobra.Command {
 			// fmt.Printf("config: %+v\n", cfg.StoragePolicy.OnPrem)
 			// fmt.Printf("config: %+v\n", cfg.StoragePolicy.S3)
 
+			// projects, err := p.LoadProjects(cmd.Context(), &datastore.ProjectFilter{OrgID: "1"})
 			// for _, v := range projects {
 			// 	fmt.Printf("Proj: %+v\n", v)
 			// }
