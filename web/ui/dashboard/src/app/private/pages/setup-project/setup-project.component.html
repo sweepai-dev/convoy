@@ -21,7 +21,7 @@
 			<h3 class="font-semibold mt-60px">Create your first subscription</h3>
 			<p class="text-14 text-grey-60 mt-6px max-w-[634px]">Subscriptions enable you to subscribe endpoints to events from any source, with extra configurations like event filters and retry logic</p>
 
-			<convoy-create-subscription (onAction)="onProjectOnboardingComplete()"></convoy-create-subscription>
+			<convoy-create-subscription (onAction)="privateService.activeProjectDetails?.type === 'incoming' ? showSourceUrl() : onProjectOnboardingComplete()"></convoy-create-subscription>
 		</div>
 
 		<div class="flex justify-end mt-32px">
@@ -32,6 +32,19 @@
 					<use xlink:href="#arrow-right-icon"></use>
 				</svg>
 			</button>
+		</div>
+	</div>
+
+	<div convoy-modal position="right" *ngIf="showSourceDetails">
+		<div class="p-20px min-h-[80vh] flex flex-col justify-center items-center" modalBody>
+			<img src="/assets/img/success.gif" loop="1" alt="Success gif" class="h-140px w-140px rounded-[100%] mb-16px" />
+			<h2 class="font-semibold text-center mb-8px">Source URL</h2>
+			<p class="text-center text-14 mb-48px">URL for receiving events from your configured source.</p>
+			<div class="bg-[#F7F9FC] border border-primary-500 h-48px flex items-center justify-between p-16px rounded-4px w-full mb-40px">
+				<span class="max-w-[300px] overflow-hidden text-14 text-grey-100 whitespace-nowrap text-ellipsis">{{ newSource.url }}</span>
+				<convoy-copy-button [text]="newSource.url || ''" notificationText="Source URL has been copied to clipboard!"></convoy-copy-button>
+			</div>
+			<button convoy-button (click)="onProjectOnboardingComplete()" class="px-82px">Done</button>
 		</div>
 	</div>
 </div>

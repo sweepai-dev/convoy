@@ -18,6 +18,10 @@
 	<ng-container *ngIf="eventsFetched?.length === 0">
 		<convoy-empty-state type="table" className="h-[70vh]" imgSrc="/assets/img/new-empty-state.png" heading="Your events are managed here." [description]="emptyStateDescription">
 			<div emptyStateCTA>
+                <!-- <h2 class="font-semibold text-grey-80">Receive Your First Webhook Event</h2>
+                <p class="flex items-center text-16 font-medium text-grey-60"> 1. Complete Project setup <button convoy-button *ngIf="!isProjectConfigurationComplete" class="mt-22px" (click)="router.navigateByUrl('/projects/' + privateService.activeProjectDetails?.uid + '/setup')">Project Setup</button></p>
+                <p class="text-16 font-medium text-grey-60"> 2. Add source URL below to provider platform</p>
+                <p class="text-16 font-medium text-grey-60"> 3. Trigger event from provider platform</p> -->
 				<button convoy-button class="mt-22px" *ngIf="isProjectConfigurationComplete" (click)="setUpEvents()">
 					Learn how to
 					{{ privateService.activeProjectDetails?.type === 'incoming' ? ' receive' : ' send' }} events

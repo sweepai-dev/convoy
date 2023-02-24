@@ -16,11 +16,12 @@ import { CreateSourceComponent } from '../../components/create-source/create-sou
 import { CreateSubscriptionComponent } from '../../components/create-subscription/create-subscription.component';
 import { CreateSubscriptionService } from '../../components/create-subscription/create-subscription.service';
 import { LoaderModule } from '../../components/loader/loader.module';
+import { CopyButtonComponent } from 'src/app/components/copy-button/copy-button.component';
 
 @Component({
 	selector: 'convoy-setup-project',
 	standalone: true,
-	imports: [CommonModule, ModalComponent, CardComponent, ButtonComponent, CreateSourceModule, CreateSubscriptionModule, CreateEndpointComponent, ToggleComponent, LoaderModule],
+	imports: [CommonModule, ModalComponent, CardComponent, ButtonComponent, CreateSourceModule, CreateSubscriptionModule, CreateEndpointComponent, ToggleComponent, LoaderModule, CopyButtonComponent],
 	templateUrl: './setup-project.component.html',
 	styleUrls: ['./setup-project.component.scss']
 })
@@ -37,6 +38,7 @@ export class SetupProjectComponent implements OnInit {
 	subscriptionData: any;
 	isLoading = false;
 	showLoader = false;
+	showSourceDetails = false;
 
 	constructor(public privateService: PrivateService, private generalService: GeneralService, private router: Router, private route: ActivatedRoute, private subscriptionService: CreateSubscriptionService) {}
 
@@ -78,5 +80,10 @@ export class SetupProjectComponent implements OnInit {
 
 		if (this.automaticSubscription) this.subscriptionService.subscriptionData = { ...this.subscriptionService.subscriptionData, name: `${this.newEndpoint.title}${this.newSource ? ' - ' + this.newSource.name : ''}` };
 		await this.createSubscriptionForm.saveSubscription();
+	}
+
+	showSourceUrl() {
+		document.getElementById('configureProjectForm')?.scroll({ top: 0, behavior: 'smooth' });
+		this.showSourceDetails = true;
 	}
 }
