@@ -115,6 +115,7 @@ export class HttpService {
 		const tokenExpiryTime = this.jwtHelper.getTokenExpirationDate(this.authDetails().access_token);
 		if (tokenExpiryTime) {
 			const expiryPeriodInSeconds = differenceInSeconds(tokenExpiryTime, currentTime);
+			console.log(expiryPeriodInSeconds);
 			if (expiryPeriodInSeconds <= 180) this.getRefreshToken();
 		}
 	}
