@@ -17,9 +17,9 @@ const (
 		id, is_analytics_enabled, is_signup_enabled,
 		storage_policy_type, on_prem_path,
 		s3_bucket, s3_access_key, s3_secret_key,
-		s3_region, s3_session_token, s3_endpoint, created_at, updated_at
+		s3_region, s3_session_token, s3_endpoint, created_at, updated_at, deleted_at
 	  )
-	  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);
+	  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14);
 	`
 
 	fetchConfiguration = `
@@ -99,6 +99,7 @@ func (c *configRepo) CreateConfiguration(ctx context.Context, config *datastore.
 		config.StoragePolicy.S3.Endpoint,
 		config.CreatedAt,
 		config.UpdatedAt,
+		config.DeletedAt,
 	)
 	if err != nil {
 		return err

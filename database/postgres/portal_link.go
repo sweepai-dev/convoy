@@ -19,8 +19,8 @@ var (
 
 const (
 	createPortalLink = `
-	INSERT INTO convoy.portal_links (id, project_id, name, token, endpoints, created_at, updated_at)
-	VALUES ($1, $2, $3, $4, $5, $6, $7);
+	INSERT INTO convoy.portal_links (id, project_id, name, token, endpoints, created_at, updated_at, deleted_at)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
 	`
 
 	createPortalLinkEndpoints = `
@@ -105,6 +105,7 @@ func (p *portalLinkRepo) CreatePortalLink(ctx context.Context, portal *datastore
 		portal.Endpoints,
 		portal.CreatedAt,
 		portal.UpdatedAt,
+		portal.DeletedAt,
 	)
 	if err != nil {
 		return err

@@ -25,9 +25,9 @@ const (
 	retry_config_retry_count,filter_config_event_types,
 	filter_config_filter_headers,filter_config_filter_body,
 	rate_limit_config_count,rate_limit_config_duration,
-	created_at, updated_at
+	created_at, updated_at, deleted_at
 	)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19);
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20);
     `
 
 	updateSubscription = `
@@ -167,7 +167,7 @@ func (s *subscriptionRepo) CreateSubscription(ctx context.Context, projectID str
 		endpointID, deviceID, sourceID,
 		ac.Count, ac.Threshold, rc.Type, rc.Duration, rc.RetryCount,
 		fc.EventTypes, fc.Filter.Headers, fc.Filter.Body, rlc.Count,
-		rlc.Duration, subscription.CreatedAt, subscription.UpdatedAt,
+		rlc.Duration, subscription.CreatedAt, subscription.UpdatedAt, subscription.DeletedAt,
 	)
 	if err != nil {
 		return err

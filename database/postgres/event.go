@@ -21,8 +21,8 @@ var ErrEventNotCreated = errors.New("event could not be created")
 
 const (
 	createEvent = `
-	INSERT INTO convoy.events (id, event_type, endpoints, project_id, source_id, headers, raw, data,created_at,updated_at)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+	INSERT INTO convoy.events (id, event_type, endpoints, project_id, source_id, headers, raw, data,created_at,updated_at, deleted_at)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 	`
 
 	createEventEndpoints = `
@@ -120,7 +120,7 @@ func (e *eventRepo) CreateEvent(ctx context.Context, event *datastore.Event) err
 		event.Headers,
 		event.Raw,
 		event.Data,
-		event.CreatedAt, event.UpdatedAt,
+		event.CreatedAt, event.UpdatedAt, event.DeletedAt,
 	)
 	if err != nil {
 		return err
