@@ -8,15 +8,6 @@ definitions:
       pagination:
         $ref: '#/definitions/datastore.PaginationData'
     type: object
-  auth.Role:
-    properties:
-      endpoint:
-        type: string
-      project:
-        type: string
-      type:
-        type: string
-    type: object
   config.SignatureHeaderProvider:
     enum:
     - X-Convoy-Signature
@@ -88,37 +79,6 @@ definitions:
       url:
         type: string
     type: object
-  datastore.Device:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      endpoint_id:
-        type: string
-      host_name:
-        type: string
-      last_seen_at:
-        type: string
-      project_id:
-        type: string
-      status:
-        $ref: '#/definitions/datastore.DeviceStatus'
-      uid:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  datastore.DeviceStatus:
-    enum:
-    - offline
-    - online
-    - disabled
-    type: string
-    x-enum-varnames:
-    - DeviceStatusOffline
-    - DeviceStatusOnline
-    - DeviceStatusDisabled
   datastore.EncodingType:
     enum:
     - base64
@@ -672,27 +632,6 @@ definitions:
       crc_verified_at:
         type: string
     type: object
-  datastore.User:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      email:
-        type: string
-      email_verified:
-        type: boolean
-      first_name:
-        type: string
-      last_name:
-        type: string
-      reset_password_expires_at:
-        type: string
-      uid:
-        type: string
-      updated_at:
-        type: string
-    type: object
   datastore.VerifierConfig:
     properties:
       api_key:
@@ -757,6 +696,7 @@ definitions:
   models.Event:
     properties:
       app_id:
+        description: Deprecated but necessary for backward compatibility
         type: string
       custom_headers:
         additionalProperties:
@@ -772,6 +712,13 @@ definitions:
       endpoint_id:
         type: string
       event_type:
+        type: string
+    type: object
+  models.ExpireSecret:
+    properties:
+      expiration:
+        type: integer
+      secret:
         type: string
     type: object
   models.FanoutEvent:
@@ -800,21 +747,6 @@ definitions:
       header:
         additionalProperties: true
         type: object
-    type: object
-  models.PortalAPIKeyResponse:
-    properties:
-      endpoint_id:
-        type: string
-      key:
-        type: string
-      key_type:
-        type: string
-      project_id:
-        type: string
-      role:
-        $ref: '#/definitions/auth.Role'
-      url:
-        type: string
     type: object
   models.PortalLink:
     properties:
@@ -864,13 +796,6 @@ definitions:
         type: string
       type:
         $ref: '#/definitions/datastore.ProjectType'
-    type: object
-  models.ResetPassword:
-    properties:
-      password:
-        type: string
-      password_confirmation:
-        type: string
     type: object
   models.RetryConfiguration:
     properties:
@@ -988,7 +913,7 @@ info:
     url: https://www.mozilla.org/en-US/MPL/2.0/
   termsOfService: https://getconvoy.io/terms
   title: Convoy API Reference
-  version: 0.8.0
+  version: 0.9.0
 paths:
   /api/v1/organisations:
     get:
@@ -1046,8 +971,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1057,7 +982,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get organisations
+      summary: List all organisations
       tags:
       - Organisations
   /api/v1/projects:
@@ -1107,8 +1032,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1118,7 +1043,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get projects
+      summary: List all projects
       tags:
       - Projects
     post:
@@ -1167,8 +1092,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1187,7 +1112,7 @@ paths:
       - application/json
       description: This endpoint deletes a project using its id
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -1222,8 +1147,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1241,7 +1166,7 @@ paths:
       - application/json
       description: This endpoint fetches a project by its id
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -1276,8 +1201,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1287,7 +1212,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get a project
+      summary: Retrieve a project
       tags:
       - Projects
     put:
@@ -1295,7 +1220,7 @@ paths:
       - application/json
       description: This endpoint updates a project
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -1336,8 +1261,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1356,7 +1281,7 @@ paths:
       - application/json
       description: This endpoint fetches an endpoints
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -1393,8 +1318,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1404,7 +1329,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get endpoints
+      summary: List all endpoints
       tags:
       - Endpoints
     post:
@@ -1412,7 +1337,7 @@ paths:
       - application/json
       description: This endpoint creates an endpoint
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -1453,8 +1378,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1473,12 +1398,12 @@ paths:
       - application/json
       description: This endpoint deletes an endpoint
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
         type: string
-      - description: endpoint id
+      - description: Endpoint ID
         in: path
         name: endpointID
         required: true
@@ -1513,8 +1438,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1532,12 +1457,12 @@ paths:
       - application/json
       description: This endpoint fetches an endpoint
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
         type: string
-      - description: endpoint id
+      - description: Endpoint ID
         in: path
         name: endpointID
         required: true
@@ -1572,8 +1497,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1583,7 +1508,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get endpoint
+      summary: Retrieve endpoint
       tags:
       - Endpoints
     put:
@@ -1591,12 +1516,12 @@ paths:
       - application/json
       description: This endpoint updates an endpoint
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
         type: string
-      - description: endpoint id
+      - description: Endpoint ID
         in: path
         name: endpointID
         required: true
@@ -1637,8 +1562,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1655,19 +1580,24 @@ paths:
     put:
       consumes:
       - application/json
-      description: This endpoint expires the current endpoint secret and generates
-        a new one.
+      description: This endpoint expires and re-generates the endpoint secret.
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
         type: string
-      - description: endpoint id
+      - description: Endpoint ID
         in: path
         name: endpointID
         required: true
         type: string
+      - description: Expire Secret Body Parameters
+        in: body
+        name: endpoint
+        required: true
+        schema:
+          $ref: '#/definitions/models.ExpireSecret'
       produces:
       - application/json
       responses:
@@ -1698,8 +1628,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1709,21 +1639,22 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Expire and generate new application endpoint secret
+      summary: Roll endpoint secret
       tags:
       - Endpoints
   /api/v1/projects/{projectID}/endpoints/{endpointID}/toggle_status:
     put:
       consumes:
       - application/json
-      description: This endpoint updates a subscription
+      description: This endpoint toggles an endpoint status between the active and
+        inactive statetes
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
         type: string
-      - description: endpoint id
+      - description: Endpoint ID
         in: path
         name: endpointID
         required: true
@@ -1758,8 +1689,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1769,20 +1700,20 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Toggles an endpoint's status from active <-> inactive
+      summary: Toggle endpoint status
       tags:
-      - Subscriptions
+      - Endpoints
   /api/v1/projects/{projectID}/eventdeliveries:
     get:
       consumes:
       - application/json
-      description: This endpoint fetch event deliveries.
+      description: This endpoint retrieves all event deliveries paginated.
       parameters:
       - description: application id
         in: query
         name: appId
         type: string
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -1859,8 +1790,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1870,16 +1801,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get event deliveries
+      summary: List all event deliveries
       tags:
-      - EventDeliveries
+      - Event Deliveries
   /api/v1/projects/{projectID}/eventdeliveries/{eventDeliveryID}:
     get:
       consumes:
       - application/json
       description: This endpoint fetches an event delivery.
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -1924,8 +1855,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1935,16 +1866,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get event delivery
+      summary: Retrieve an event delivery
       tags:
-      - EventDeliveries
+      - Event Deliveries
   /api/v1/projects/{projectID}/eventdeliveries/{eventDeliveryID}/deliveryattempts:
     get:
       consumes:
       - application/json
       description: This endpoint fetches an app message's delivery attempts
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -1986,8 +1917,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -1997,16 +1928,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get delivery attempts
+      summary: List delivery attempts
       tags:
-      - DeliveryAttempts
+      - Delivery Attempts
   /api/v1/projects/{projectID}/eventdeliveries/{eventDeliveryID}/deliveryattempts/{deliveryAttemptID}:
     get:
       consumes:
       - application/json
       description: This endpoint fetches an app event delivery attempt
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2051,8 +1982,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2062,16 +1993,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get delivery attempt
+      summary: Retrieve a delivery attempt
       tags:
-      - DeliveryAttempts
+      - Delivery Attempts
   /api/v1/projects/{projectID}/eventdeliveries/{eventDeliveryID}/resend:
     put:
       consumes:
       - application/json
-      description: This endpoint resends an app event
+      description: This endpoint retries an event delivery.
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2116,8 +2047,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2127,16 +2058,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Resend an app event
+      summary: Retry event delivery
       tags:
-      - EventDeliveries
+      - Event Deliveries
   /api/v1/projects/{projectID}/eventdeliveries/batchretry:
     post:
       consumes:
       - application/json
-      description: This endpoint resends multiple app events
+      description: This endpoint batch retries multiple event deliveries at once.
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2184,8 +2115,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2195,101 +2126,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Batch Resend app events
+      summary: Batch retry event delivery
       tags:
-      - EventDeliveries
-  /api/v1/projects/{projectID}/eventdeliveries/countbatchretryevents:
-    get:
-      consumes:
-      - application/json
-      description: This endpoint counts app events that will be affected by a batch
-        retry operation
-      parameters:
-      - description: application id
-        in: query
-        name: appId
-        type: string
-      - description: Project id
-        in: path
-        name: projectID
-        required: true
-        type: string
-      - description: start date
-        in: query
-        name: startDate
-        type: string
-      - description: end date
-        in: query
-        name: endDate
-        type: string
-      - description: results per page
-        in: query
-        name: perPage
-        type: string
-      - description: page number
-        in: query
-        name: page
-        type: string
-      - description: sort order
-        in: query
-        name: sort
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  allOf:
-                  - $ref: '#/definitions/api.Stub'
-                  - properties:
-                      num:
-                        type: integer
-                    type: object
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "401":
-          description: Unauthorized
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: Count affected eventDeliveries
-      tags:
-      - EventDeliveries
+      - Event Deliveries
   /api/v1/projects/{projectID}/eventdeliveries/forceresend:
     post:
       consumes:
       - application/json
-      description: This endpoint force resends multiple app events
+      description: This endpoint enables you retry a previously successful event delivery
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2337,8 +2183,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2348,9 +2194,9 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Force Resend app events
+      summary: Force retry event delivery
       tags:
-      - EventDeliveries
+      - Event Deliveries
   /api/v1/projects/{projectID}/events:
     get:
       consumes:
@@ -2361,7 +2207,7 @@ paths:
         in: query
         name: appId
         type: string
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2432,8 +2278,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2443,7 +2289,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get app events with pagination
+      summary: List all events
       tags:
       - Events
     post:
@@ -2451,7 +2297,7 @@ paths:
       - application/json
       description: This endpoint creates an endpoint event
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2497,8 +2343,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2508,16 +2354,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Create endpoint event
+      summary: Create an event
       tags:
       - Events
   /api/v1/projects/{projectID}/events/{eventID}:
     get:
       consumes:
       - application/json
-      description: This endpoint fetches an endpoint event
+      description: This endpoint retrieves an event
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2562,8 +2408,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2573,16 +2419,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get endpoint event
+      summary: Retrieve an event
       tags:
       - Events
   /api/v1/projects/{projectID}/events/{eventID}/replay:
     put:
       consumes:
       - application/json
-      description: This endpoint replays an endpoint event
+      description: This endpoint replays an event afresh assuming it is a new event.
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2627,8 +2473,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2638,16 +2484,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Replay endpoint event
+      summary: Replay event
       tags:
       - Events
   /api/v1/projects/{projectID}/events/batchreplay:
     post:
       consumes:
       - application/json
-      description: This endpoint replays multiple events
+      description: This endpoint replays multiple events at once.
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2660,7 +2506,7 @@ paths:
         in: query
         name: endDate
         type: string
-      - description: Source id
+      - description: Source ID
         in: query
         name: source
         type: string
@@ -2699,8 +2545,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2710,80 +2556,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Replays multiple endpoint events
-      tags:
-      - Events
-  /api/v1/projects/{projectID}/events/countbatchreplayevents:
-    get:
-      consumes:
-      - application/json
-      description: This endpoint counts events that will be affected by a batch replay
-        operation
-      parameters:
-      - description: Project id
-        in: path
-        name: projectID
-        required: true
-        type: string
-      - description: start date
-        in: query
-        name: startDate
-        type: string
-      - description: end date
-        in: query
-        name: endDate
-        type: string
-      - description: Source id
-        in: query
-        name: source
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  allOf:
-                  - $ref: '#/definitions/api.Stub'
-                  - properties:
-                      num:
-                        type: integer
-                    type: object
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "401":
-          description: Unauthorized
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: Counts affected events
+      summary: Batch replay events
       tags:
       - Events
   /api/v1/projects/{projectID}/events/fanout:
@@ -2793,7 +2566,7 @@ paths:
       description: This endpoint uses the owner_id to fan out an event to multiple
         endpoints.
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2839,8 +2612,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2850,7 +2623,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Fan out an event to multiple endpoints.
+      summary: Fan out an event
       tags:
       - Events
   /api/v1/projects/{projectID}/portal-links:
@@ -2859,7 +2632,7 @@ paths:
       - application/json
       description: This endpoint fetches multiple portal links
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2913,8 +2686,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2924,15 +2697,15 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Fetch multiple portal links
+      summary: List all portal links
       tags:
-      - PortalLinks
+      - Portal Links
     post:
       consumes:
       - application/json
       description: This endpoint creates a portal link
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -2973,8 +2746,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -2986,14 +2759,14 @@ paths:
       - ApiKeyAuth: []
       summary: Create a portal link
       tags:
-      - PortalLinks
+      - Portal Links
   /api/v1/projects/{projectID}/portal-links/{portalLinkID}:
     get:
       consumes:
       - application/json
-      description: This endpoint fetches a portal link by its id
+      description: This endpoint retrieves a portal link by its id.
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3033,8 +2806,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3044,15 +2817,15 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get a portal link
+      summary: Retrieve a portal link
       tags:
-      - PortalLinks
+      - Portal Links
     put:
       consumes:
       - application/json
       description: This endpoint updates a portal link
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3098,8 +2871,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3111,14 +2884,14 @@ paths:
       - ApiKeyAuth: []
       summary: Update a portal link
       tags:
-      - PortalLinks
+      - Portal Links
   /api/v1/projects/{projectID}/portal-links/{portalLinkID}/revoke:
     put:
       consumes:
       - application/json
       description: This endpoint revokes a portal link
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3158,8 +2931,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3169,16 +2942,16 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Revoke Portal Link
+      summary: Revoke a portal link
       tags:
-      - PortalLinks
+      - Portal Links
   /api/v1/projects/{projectID}/sources:
     get:
       consumes:
       - application/json
       description: This endpoint fetches multiple sources
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3232,8 +3005,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3243,7 +3016,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Fetch multiple sources
+      summary: List all sources
       tags:
       - Sources
     post:
@@ -3251,7 +3024,7 @@ paths:
       - application/json
       description: This endpoint creates a source
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3292,8 +3065,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3312,7 +3085,7 @@ paths:
       - application/json
       description: This endpoint deletes a source
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3352,8 +3125,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3363,20 +3136,20 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Delete source
+      summary: Delete a source
       tags:
       - Sources
     get:
       consumes:
       - application/json
-      description: This endpoint fetches a source by its id
+      description: This endpoint retrieves a source by its id
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
         type: string
-      - description: source id
+      - description: Source ID
         in: path
         name: sourceID
         required: true
@@ -3411,8 +3184,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3422,7 +3195,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get a source
+      summary: Retrieve a source
       tags:
       - Sources
     put:
@@ -3430,7 +3203,7 @@ paths:
       - application/json
       description: This endpoint updates a source
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3476,8 +3249,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3512,7 +3285,7 @@ paths:
         in: query
         name: q
         type: string
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3554,8 +3327,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3565,7 +3338,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Get all subscriptions
+      summary: List all subscriptions
       tags:
       - Subscriptions
     post:
@@ -3573,7 +3346,7 @@ paths:
       - application/json
       description: This endpoint creates a subscriptions
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3621,8 +3394,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3632,7 +3405,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Creates a subscription
+      summary: Create a subscription
       tags:
       - Subscriptions
   /api/v1/projects/{projectID}/subscriptions/{subscriptionID}:
@@ -3641,7 +3414,7 @@ paths:
       - application/json
       description: This endpoint deletes a subscription
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3681,8 +3454,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3698,9 +3471,9 @@ paths:
     get:
       consumes:
       - application/json
-      description: This endpoint fetches an Subscription by it's id
+      description: This endpoint retrieves a single subscription
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3740,8 +3513,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3751,7 +3524,7 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Gets a subscription
+      summary: Retrieve a subscription
       tags:
       - Subscriptions
     put:
@@ -3759,7 +3532,7 @@ paths:
       - application/json
       description: This endpoint updates a subscription
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3805,8 +3578,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3819,73 +3592,14 @@ paths:
       summary: Update a subscription
       tags:
       - Subscriptions
-  /api/v1/projects/{projectID}/subscriptions/{subscriptionID}/toggle_status:
-    put:
-      consumes:
-      - application/json
-      description: This endpoint updates a subscription
-      parameters:
-      - description: Project id
-        in: path
-        name: projectID
-        required: true
-        type: string
-      - description: subscription id
-        in: path
-        name: subscriptionID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/datastore.Subscription'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "401":
-          description: Unauthorized
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: Toggles a subscription's status from active <-> inactive
-      tags:
-      - Subscriptions
   /api/v1/projects/{projectID}/subscriptions/test_filter:
     post:
       consumes:
       - application/json
-      description: This endpoint tests a subscription's filter
+      description: This endpoint validates that a filter will match a certain payload
+        structure.
       parameters:
-      - description: Project id
+      - description: Project ID
         in: path
         name: projectID
         required: true
@@ -3926,8 +3640,8 @@ paths:
                 data:
                   $ref: '#/definitions/api.Stub'
               type: object
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
           schema:
             allOf:
             - $ref: '#/definitions/util.ServerResponse'
@@ -3937,319 +3651,9 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: Test subscription filter
+      summary: Validate subscription filter
       tags:
       - Subscriptions
-  /portal/devices:
-    get:
-      consumes:
-      - application/json
-      description: This endpoint fetches all portal link devices
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/datastore.Device'
-                  type: array
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "401":
-          description: Unauthorized
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-      summary: Get portal link devices
-      tags:
-      - PortalLinks
-  /portal/endpoints:
-    get:
-      consumes:
-      - application/json
-      description: This endpoint fetches all portal link endpoints
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  items:
-                    $ref: '#/definitions/datastore.Endpoint'
-                  type: array
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "401":
-          description: Unauthorized
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-      summary: Get endpoints
-      tags:
-      - PortalLinks
-    post:
-      consumes:
-      - application/json
-      description: This endpoint creates an endpoint
-      parameters:
-      - description: Endpoint Details
-        in: body
-        name: endpoint
-        required: true
-        schema:
-          $ref: '#/definitions/models.Endpoint'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/datastore.Endpoint'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "401":
-          description: Unauthorized
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-      summary: Create an endpoint
-      tags:
-      - PortalLinks
-  /portal/keys:
-    get:
-      consumes:
-      - application/json
-      description: This endpoint fetches all portal link endpoints keys
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/models.PortalAPIKeyResponse'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "401":
-          description: Unauthorized
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-      summary: Get portal link keys
-      tags:
-      - PortalLinks
-  /ui/users/forgot-password:
-    post:
-      consumes:
-      - application/json
-      description: This endpoint verifies a user's email
-      parameters:
-      - description: Email verification token
-        in: query
-        name: token
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "401":
-          description: Unauthorized
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-      summary: Verify Email
-      tags:
-      - User
-  /ui/users/reset-password:
-    post:
-      consumes:
-      - application/json
-      description: This endpoint resets a users password
-      parameters:
-      - description: reset token
-        in: query
-        name: token
-        required: true
-        type: string
-      - description: Reset Password Details
-        in: body
-        name: password
-        required: true
-        schema:
-          $ref: '#/definitions/models.ResetPassword'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/datastore.User'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "401":
-          description: Unauthorized
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/util.ServerResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/api.Stub'
-              type: object
-      summary: Reset user password
-      tags:
-      - User
 schemes:
 - https
 securityDefinitions:
@@ -4270,10 +3674,10 @@ tags:
 - description: Source related APIs
   name: Sources
 - description: EventDelivery related APIs
-  name: EventDeliveries
+  name: Event Deliveries
 - description: Delivery Attempt related APIs
-  name: DeliveryAttempts
+  name: Delivery Attempts
 - description: Project related APIs
   name: Projects
 - description: Portal Links related APIs
-  name: PortalLinks
+  name: Portal Links
