@@ -91,6 +91,10 @@ const routes: Routes = [
 			{
 				path: 'events-log',
 				loadComponent: () => import('./event-logs/event-logs.component').then(m => m.EventLogsComponent)
+			},
+			{
+				path: 'cli-devices',
+				loadComponent: () => import('./cli-devices/cli-devices.component').then(m => m.CliDevicesComponent)
 			}
 		]
 	}

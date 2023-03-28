@@ -58,7 +58,14 @@ export class ProjectComponent implements OnInit {
 		try {
 			const projectDetails = await this.privateService.getProjectDetails();
 			this.projectDetails = projectDetails.data;
-			if (this.projectDetails.type === 'incoming') this.sideBarItems.splice(4, 1);
+			if (this.projectDetails.type === 'incoming') {
+				this.sideBarItems.splice(4, 1);
+				this.sideBarItems.push({
+					name: 'CLI Devices',
+					icon: 'cli-device',
+					route: '/cli-devices'
+				});
+			}
 			this.isLoadingProjectDetails = false;
 		} catch (error) {
 			this.isLoadingProjectDetails = false;
