@@ -5,7 +5,7 @@ import { randomItem } from "https://jslib.k6.io/k6-utils/1.2.0/index.js";
 
 const baseUrl = `${__ENV.BASE_URL}/api/v1`;
 const apiKey = __ENV.API_KEY;
-const appId = __ENV.APP_ID;
+const endpointId = __ENV.APP_ID;
 const params = {
     headers: {
         "Content-Type": "application/json",
