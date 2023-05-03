@@ -38,8 +38,11 @@ export const generateEventPayload = (appId) => ({
 export let options = {
     noConnectionReuse: true,
     stages: [
-        { duration: "60s", target: 20 }, // simulate ramp-up of traffic from 1 to 20 users over 60s
+        { duration: "30s", target: 20 }, // simulate ramp-up of traffic from 1 to 20 users over 30s
         { duration: "60s", target: 20 }, // stay at 20 users for 60s
+        { duration: "30m", target: 30 }, // ramp-up of traffic from 20 to 50 users over 60s and stay there for 30m to simulate a typical day
+        { duration: "60s", target: 20 }, // wind down users to at 20 users for 60s
+        { duration: "30s", target: 0 },  // wind down users to at 0 users for 30s
     ],
     thresholds: {
         "List_Events": ["p(95) < 3000"], //95% of requests must complete below 3s
@@ -48,13 +51,15 @@ export let options = {
         "Create_Event_error": ["rate<0.1"], // error rate must be less than 10%
         http_req_duration: ["p(99)<6000"], // 99% of requests must complete below 6s
     },
+    summaryTrendStats: ['avg', 'min', 'med', 'max', 'p(95)', 'p(99)', 'p(99.99)', 'count'],
+    setupTimeout: '30s',
 };
 
 export default function () {
-    let eventBody = JSON.stringify(generateEventPayload(appId));
-    const listEventsUrl = `${baseUrl}/events?appId=${appId}`;
+    let eventBody = JSON.stringify(generateEventPayload(endpointId));
+    const listEventsUrl = `${baseUrl}/events?endpointId=${endpointId}`;
     const createEventUrl = `${baseUrl}/events`;
-  
+
     const requests = {
         "List_Events": {
             method: "GET",
@@ -84,6 +89,6 @@ export default function () {
     }) || createEventErrorRate.add(1)
 
     createEventsTrend.add(createResp.timings.duration)
-    
+
     sleep(1);
 }
