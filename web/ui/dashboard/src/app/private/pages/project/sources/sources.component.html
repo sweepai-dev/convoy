@@ -7,7 +7,7 @@
 	<svg width="16" height="16" class="mx-4px">
 		<use xlink:href="#arrow-right-icon"></use>
 	</svg>
-	<span class="text-primary-100 font-medium">Sources</span>
+	<span class="text-primary-400 font-medium">Sources</span>
 </div>
 
 <!-- empty state  -->
@@ -28,7 +28,7 @@
 </div>
 
 <ng-container *ngIf="!isLoadingSources && sources?.content?.length">
-	<div class="flex justify-between items-end border-b border-b-grey-10 pb-20px mb-24px">
+	<div class="flex justify-between items-end border-b border-b-primary-25 pb-20px mb-24px">
 		<div class="flex items-center">
 			<h1 class="text-24 font-bold text-grey-80 mr-10px">Sources</h1>
 			<convoy-tooltip tooltipContent="Your sources are channels connected to Convoy to trigger webhook events to subscribed endpoints" position="right"></convoy-tooltip>
@@ -47,18 +47,18 @@
 						<div class="flex items-center">
 							<img [src]="'assets/img/' + source.pub_sub.type + '.png'" alt="icon" class="mr-12px" />
 							<div>
-								<p class="text-10 text-grey-40 capitalize mb-4px">{{ source.pub_sub.type | sourceValue : 'pub_sub' }}</p>
+								<p class="text-10 text-grey-40 capitalize mb-4px">{{ source.pub_sub.type | sourceValue: 'pub_sub' }}</p>
 								<p class="text-14 font-medium">{{ source.name }}</p>
 							</div>
 						</div>
 
 						<div convoy-dropdown position="left" size="sm" class="ml-4px">
-							<button dropdownTrigger convoy-button size="sm" fill="clear" class="!p-0">
+							<button dropdownTrigger convoy-button size="sm" fill="ghost" class="!p-0">
 								<img src="assets/img/more-icon-vertical.svg" class="h-5" alt="more icon" />
 							</button>
 							<ul dropdownOptions>
 								<li class="border-b border-grey-20">
-									<button convoy-dropdown-option convoy-button size="sm" fill="clear" class="w-full !justify-start" [routerLink]="'./' + source?.uid">
+									<button convoy-dropdown-option convoy-button size="sm" fill="ghost" class="w-full !justify-start" [routerLink]="'./' + source?.uid">
 										<svg width="16" height="16" class="mr-8px fill-primary-100">
 											<use xlink:href="#edit-icon"></use>
 										</svg>
@@ -66,7 +66,7 @@
 									</button>
 								</li>
 								<li>
-									<button convoy-permission="Sources|MANAGE" convoy-dropdown-option convoy-button size="sm" fill="clear" color="danger" class="w-full !justify-start" (click)="activeSource = source; showDeleteSourceModal = true">
+									<button convoy-permission="Sources|MANAGE" convoy-dropdown-option convoy-button size="sm" fill="ghost" color="danger" class="w-full !justify-start" (click)="activeSource = source; showDeleteSourceModal = true">
 										<svg width="16" height="16" class="mr-8px fill-danger-100">
 											<use xlink:href="#delete-icon"></use>
 										</svg>
@@ -80,13 +80,13 @@
 
 				<!-- incoming project sources -->
 				<ng-container *ngIf="privateService.activeProjectDetails?.type === 'incoming'">
-					<div class="px-24px pb-12px border-b border-b-grey-10 cursor-pointer">
-						<div class="text-grey-40 text-10 mb-4px">{{ source.provider || (source.verifier.type | sourceValue : 'verifier') }}</div>
+					<div class="px-24px pb-12px border-b border-b-primary-25 cursor-pointer">
+						<div class="text-grey-40 text-10 mb-4px">{{ source.provider || (source.verifier.type | sourceValue: 'verifier') }}</div>
 						<div class="flex justify-between items-center">
 							<div class="text-14 font-medium">{{ source.name }}</div>
 
 							<div convoy-dropdown #incomingSourceDropdown position="left" size="sm" class="ml-4px">
-								<button dropdownTrigger convoy-button size="sm" fill="clear" class="!p-0">
+								<button dropdownTrigger convoy-button size="sm" fill="ghost" class="!p-0">
 									<img src="assets/img/more-icon-vertical.svg" class="h-5" alt="more icon" />
 								</button>
 								<ul dropdownOptions>
@@ -96,7 +96,7 @@
 										</div>
 									</li>
 									<li class="border-b border-grey-20">
-										<button convoy-dropdown-option convoy-button size="sm" fill="clear" class="w-full !justify-start" [routerLink]="'./' + source?.uid">
+										<button convoy-dropdown-option convoy-button size="sm" fill="ghost" class="w-full !justify-start" [routerLink]="'./' + source?.uid">
 											<svg width="16" height="16" class="mr-8px fill-primary-100">
 												<use xlink:href="#edit-icon"></use>
 											</svg>
@@ -104,7 +104,7 @@
 										</button>
 									</li>
 									<li>
-										<button convoy-permission="Sources|MANAGE" convoy-dropdown-option convoy-button size="sm" fill="clear" color="danger" class="w-full !justify-start" (click)="activeSource = source; showDeleteSourceModal = true">
+										<button convoy-permission="Sources|MANAGE" convoy-dropdown-option convoy-button size="sm" fill="ghost" color="danger" class="w-full !justify-start" (click)="activeSource = source; showDeleteSourceModal = true">
 											<svg width="16" height="16" class="mr-8px fill-danger-100">
 												<use xlink:href="#delete-icon"></use>
 											</svg>

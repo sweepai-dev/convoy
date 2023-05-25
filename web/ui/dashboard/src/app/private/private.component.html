@@ -1,6 +1,6 @@
 <div class="bg-[#fafafe] min-h-screen overflow-y-auto flex flex-col justify-between">
 	<div class="">
-		<header class="w-full bg-white-100 border-b border-b-grey-10">
+		<header class="w-full bg-white-100 border-b border-b-primary-25">
 			<div class="flex items-center justify-between w-full max-w-[1440px] m-auto bg-white-100 px-64px py-12px">
 				<div class="flex items-center">
 					<a routerLink="/" rel="noreferrer">
@@ -10,16 +10,16 @@
 					<nav class="ml-130px desktop:ml-20px transition-all duration-200">
 						<ul class="flex items-center">
 							<li *ngIf="!organisations?.length">
-								<a routerLink="/get-started" routerLinkActive="bg-primary-500 text-primary-100 font-medium" class="py-8px px-16px mr-32px rounded-4px text-14 transition-all duration-200">Get Started</a>
+								<a routerLink="/get-started" routerLinkActive="bg-primary-25 text-primary-400" class="py-8px px-16px mr-32px rounded-4px text-14 transition-all duration-200">Get Started</a>
 							</li>
 							<li *ngIf="organisations?.length">
-								<a routerLink="/projects" routerLinkActive="bg-primary-500 text-primary-100 font-medium" class="py-8px px-16px mr-32px rounded-4px text-14 transition-all duration-200">Projects</a>
+								<a routerLink="/projects" routerLinkActive="bg-primary-25 text-primary-400" class="py-8px px-16px mr-32px rounded-4px text-14 transition-all duration-200">Projects</a>
 							</li>
 							<li *ngIf="organisations?.length">
-								<a routerLink="/team" routerLinkActive="bg-primary-500 text-primary-100 font-medium" class="py-8px px-16px mr-32px rounded-4px text-14 transition-all duration-200">Team</a>
+								<a routerLink="/team" routerLinkActive="bg-primary-25 text-primary-400" class="py-8px px-16px mr-32px rounded-4px text-14 transition-all duration-200">Team</a>
 							</li>
 							<li *ngIf="organisations?.length">
-								<a routerLink="/settings" routerLinkActive="bg-primary-500 text-primary-100 font-medium" class="py-8px px-16px mr-32px rounded-4px text-14 transition-all duration-200">Settings</a>
+								<a routerLink="/settings" routerLinkActive="bg-primary-25 text-primary-400" class="py-8px px-16px mr-32px rounded-4px text-14 transition-all duration-200">Settings</a>
 							</li>
 						</ul>
 					</nav>
@@ -28,22 +28,22 @@
 				<div class="flex items-center">
 					<a class="flex items-center mr-16px" target="_blank" href="https://getconvoy.io/docs" rel="noreferrer">
 						<img src="/assets/img/doc-icon-primary.svg" alt="doc icon" />
-						<span class="font-medium text-14 text-primary-100 ml-2">Go to docs</span>
+						<span class="text-14 text-primary-400 ml-2">Go to docs</span>
 					</a>
 
 					<div convoy-dropdown size="xl" #organisationDropdown>
-						<button dropdownTrigger convoy-button color="grey" texture="light" size="sm" class="bg-grey-10 py-10px px-20px rounded-8px mr-12px">
-							<convoy-badge *ngIf="organisations?.length" className="mr-8px" [text]="userOrganization?.name || ''"></convoy-badge>
+						<button dropdownTrigger convoy-button color="gray" texture="light" size="sm" class="py-8px px-16px mr-24px">
+							<div convoy-badge *ngIf="organisations?.length" class="mr-8px" [text]="userOrganization?.name || ''"></div>
 
-							<img src="/assets/img/angle-arrow-down.svg" alt="arrow down icon" />
+							<img src="/assets/img/angle-arrow-down.svg" class="ml-26px" alt="arrow down icon" />
 						</button>
 
 						<ul dropdownOptions>
-							<li convoy-dropdown-option class="font-semibold text-14 text-grey-40 px-32px pt-24px pb-16px border-b border-b-grey-10">Your organisations ({{ organisations?.length || 0 }})</li>
+							<li convoy-dropdown-option class="text-14 text-gray-500 px-32px py-16px border-b border-b-primary-25">Your organisations ({{ organisations?.length || 0 }})</li>
 
 							<ul [hidden]="!organisations?.length">
-								<li convoy-dropdown-option *ngFor="let organisation of organisations">
-									<button convoy-button fill="text" class="justify-start px-30px py-12px w-full" (click)="selectOrganisation(organisation)">
+								<li convoy-dropdown-option class="hover:bg-primary-25 transition-all duration-300" *ngFor="let organisation of organisations">
+									<button convoy-button fill="ghost" spacing="false" class="justify-start px-30px py-12px w-full mb-8px" (click)="selectOrganisation(organisation)">
 										<div class="flex justify-between items-center w-full">
 											<convoy-badge [text]="organisation.name"></convoy-badge>
 
@@ -53,8 +53,8 @@
 								</li>
 							</ul>
 
-							<li class="border-t border-t-grey-10">
-								<button convoy-dropdown-option convoy-button fill="text" class="px-30px py-16px" (click)="privateService.showCreateOrgModal = true">
+							<li class="border-t border-t-primary-25">
+								<button convoy-dropdown-option convoy-button fill="ghost" spacing="false" class="px-30px py-16px" (click)="privateService.showCreateOrgModal = true">
 									<img src="/assets/img/add-circlar-icon.svg" alt="add icon" class="mr-8px" />
 									Add {{ organisations?.length ? 'another' : 'an' }} Organization
 								</button>
@@ -63,14 +63,14 @@
 					</div>
 
 					<div convoy-dropdown size="lg" #accountDropdown>
-						<button dropdownTrigger convoy-button color="grey" texture="light" size="sm" class="bg-grey-10 py-12px px-20px rounded-8px h-36px">
+						<button dropdownTrigger convoy-button color="gray" texture="light" size="sm" class="py-8px px-16px mr-24px h-40px">
 							<img src="/assets/img/nav-bar-more-primary.svg" alt="more icon" />
 						</button>
 
 						<ul dropdownOptions>
-							<li class="border-b border-b-grey-10 px-24px py-16px">
+							<li class="border-b border-b-primary-25 px-24px py-16px">
 								<h3 class="capitalize font-medium">{{ authDetails()?.first_name }} {{ authDetails()?.last_name }}</h3>
-								<p class="text-12 text-grey-40">{{ authDetails()?.email }}</p>
+								<p class="text-12 text-gray-500">{{ authDetails()?.email }}</p>
 							</li>
 							<li>
 								<ul>
@@ -79,8 +79,8 @@
 									</li>
 								</ul>
 							</li>
-							<li class="border-t border-t-grey-10">
-								<button convoy-dropdown-option convoy-button fill="text" color="danger" class="font-medium px-24px py-20px text-14" (click)="logout()">Logout</button>
+							<li class="border-t border-t-primary-25">
+								<button convoy-dropdown-option convoy-button fill="ghost" spacing="false" color="error" class="px-24px py-20px text-14 w-full !justify-start" (click)="logout()">Logout</button>
 							</li>
 						</ul>
 					</div>

@@ -2,17 +2,18 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'convoy-badge',
+	selector: 'convoy-badge, [convoy-badge]',
 	standalone: true,
 	imports: [CommonModule],
 	templateUrl: './badge.component.html',
 	styleUrls: ['./badge.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	host: { class: 'flex items-center' }
 })
 export class BadgeComponent implements OnInit {
 	@Input('texture') texture: 'dark' | 'light' = 'light';
 	@Input('text') text!: string;
-	@Input('className') class!: string;
+
 	constructor() {}
 
 	ngOnInit(): void {}

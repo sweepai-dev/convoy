@@ -1,7 +1,7 @@
 <div convoy-page size="md">
 	<div convoy-card class="flex p-0">
-		<div class="border-r border-r-grey-10 w-full max-w-[300px]">
-			<div class="border-b border-b-grey-10 px-40px py-20px">
+		<div class="border-r border-r-primary-25 w-full max-w-[300px]">
+			<div class="border-b border-b-primary-25 px-40px py-20px">
 				<h3 class="font-semibold">Settings</h3>
 			</div>
 			<ul class="pl-40px py-32px">
@@ -10,7 +10,7 @@
 						class="flex items-center"
 						[class]="
 							activePage === menu.name
-								? 'bg-primary-500 text-primary-100 rounded-8px transition-all duration-200 py-12px !px-16px mb-20px !justify-start min-w-[216px]'
+								? 'bg-primary-25 text-primary-400 rounded-8px transition-all duration-200 py-12px !px-16px mb-20px !justify-start min-w-[216px]'
 								: 'text-grey-40 rounded-8px transition-all duration-200 py-12px !px-16px mb-20px !justify-start min-w-[216px]'
 						"
 						(click)="toggleActivePage(menu.name)"

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 @Component({
 	selector: 'convoy-list-item, [convoy-list-item]',
 	standalone: true,
-	host: { class: 'flex items-center justify-between py-10px transition-all duration-300 hover:bg-primary-500', '[class]': 'class' },
+	host: { class: 'flex items-center justify-between py-10px transition-all duration-300 hover:bg-primary-25', '[class]': 'class' },
 	imports: [CommonModule],
 	template: `
 		<ng-content></ng-content>
@@ -19,6 +19,6 @@ export class ListItemComponent implements OnInit {
 	ngOnInit(): void {}
 
 	get class() {
-		return `${this.hasBorder ? 'border-grey-10 border-b' : ''} ${this.active === 'true' ? 'bg-primary-500' : ''}`;
+		return `${this.hasBorder ? 'border-primary-25 border-b' : ''} ${this.active === 'true' ? 'bg-primary-25' : ''}`;
 	}
 }

@@ -10,18 +10,29 @@ import { STATUS_COLOR } from 'src/app/models/global.model';
 		<ng-content></ng-content>
 	`,
 	styleUrls: ['./tag.component.scss'],
-	host: { class: 'py-[1px] px-8px rounded-8px w-fit text-center text-12 font-medium', '[class]': 'classes' }
+	host: { class: 'rounded-22px w-fit text-center text-12 justify-between gap-x-4px disabled:opacity-50', '[class]': 'classes' }
 })
 export class TagComponent implements OnInit {
-	@Input('type') type: STATUS_COLOR = 'grey';
+	@Input('type') type: STATUS_COLOR = 'gray';
+	@Input('fill') fill: 'outline' | 'soft' | 'solid' | 'soft-outline' = 'soft';
+	@Input('color') color: 'primary' | 'danger' | 'warning' | 'gray' | 'success' = 'primary';
+	@Input('size') size: 'sm' | 'md' | 'lg' = 'md';
 	@Input('className') class!: string;
+
+	fontSizes = { sm: 'text-10', md: `text-12`, lg: `text-14` };
+	spacing = { sm: `py-2px px-6px`, md: `py-4px px-12px`, lg: `py-8px px-14px w-full` };
 
 	constructor() {}
 
 	ngOnInit(): void {}
 
 	get classes() {
-		if (this.type === 'grey') return `text-grey-40 bg-grey-10 ${this.class}`;
-		return ` text-${this.type}-100 bg-${this.type}-500  ${this.class}`;
+		const buttonTypes = {
+			solid: `bg-${this.color}-400 text-white-100`,
+			outline: `border border-${this.color}-400 text-${this.color}-400`,
+			soft: `rounded-22px bg-${this.color}-50 text-${this.color}-400`,
+			'soft-outline': `rounded-22px border-${this.color}-400 bg-${this.color}-50 text-${this.color}-400`
+		};
+		return `${this.fontSizes[this.size]} ${this.spacing[this.size]} ${buttonTypes[this.fill]}`;
 	}
 }

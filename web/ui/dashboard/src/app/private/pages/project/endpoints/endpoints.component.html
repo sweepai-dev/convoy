@@ -7,10 +7,10 @@
 	<svg width="16" height="16" class="mx-4px">
 		<use xlink:href="#arrow-right-icon"></use>
 	</svg>
-	<span class="text-primary-100 font-medium">Endpoints</span>
+	<span class="text-primary-400 font-medium">Endpoints</span>
 </div>
 
-<div class="flex justify-between items-end mt-24px border-b border-b-grey-10 pb-20px mb-24px">
+<div class="flex justify-between items-end mt-24px border-b border-b-primary-25 pb-20px mb-24px">
 	<div class="flex items-center">
 		<h1 class="text-24 font-bold text-grey-80 mr-10px">Endpoints</h1>
 		<convoy-tooltip tooltipContent="Endpoints are receivers, they recieve the webhook events from sources it is subscribed to" position="right"></convoy-tooltip>
@@ -22,7 +22,7 @@
 		<form class="border border-primary-400 h-36px px-14px py-0 max-w-[350px] w-full rounded-[10px] flex items-center bg-white-100">
 			<img src="/assets/img/search-icon.svg" alt="search icon" class="mr-10px" />
 			<input type="search" placeholder="Search endpoints" class="w-full text-grey-40 text-14 outline-none" [(ngModel)]="endpointSearchString" (keyup)="searchEndpoint({ searchInput: $event })" [ngModelOptions]="{ standalone: true }" />
-			<button convoy-button *ngIf="endpointSearchString && endpointSearchString.length > 0" class="transition-all duration-200" fill="text" size="sm">
+			<button convoy-button *ngIf="endpointSearchString && endpointSearchString.length > 0" class="transition-all duration-200" fill="ghost" spacing="false" size="sm">
 				<img src="/assets/img/enter-icon.png" alt="enter icon" class="w-16px" />
 			</button>
 		</form>
@@ -64,7 +64,7 @@
 					</tr>
 					<tr convoy-table-row class="group" *ngFor="let endpoint of endpointGroup.content; let index = index" [id]="'endpoint' + i">
 						<td convoy-table-cell class="relative pl-16px w-176px">
-							<convoy-tag type="grey" className="w-130px overflow-hidden overflow-ellipsis mr-8px">{{ endpoint.uid }}</convoy-tag>
+							<convoy-tag type="gray" className="w-130px overflow-hidden overflow-ellipsis mr-8px">{{ endpoint.uid }}</convoy-tag>
 							<convoy-copy-button [notificationText]="endpoint.title + ' ID has been copied to clipboard'" className="absolute translate-x-0 translate-y-[-50%] top-[50] hidden group-hover:block" [text]="endpoint.uid"></convoy-copy-button>
 						</td>
 						<td convoy-table-cell [routerLink]="['./' + endpoint.uid]">
@@ -74,10 +74,10 @@
 							{{ endpoint.title }}
 						</td>
 						<td convoy-table-cell [routerLink]="['./' + endpoint.uid]">
-							{{ endpoint.created_at | date : 'hh:mm:ss a' }}
+							{{ endpoint.created_at | date: 'hh:mm:ss a' }}
 						</td>
 						<td convoy-table-cell [routerLink]="['./' + endpoint.uid]">
-							{{ endpoint.updated_at | date : 'mediumTime' }}
+							{{ endpoint.updated_at | date: 'mediumTime' }}
 						</td>
 						<td convoy-table-cell>
 							<button convoy-button size="sm" [routerLink]="['../events']" [relativeTo]="route" [queryParams]="{ linksEndpoint: endpoint.uid }" texture="light">

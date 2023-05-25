@@ -90,7 +90,7 @@ export class DatePickerComponent implements OnInit {
 	}
 
 	get getCalculatedClass() {
-		return `${this.selectedDates?.startDate && this.selectedDates?.endDate ? 'text-primary-100 !bg-primary-500 ' : ''}`;
+		return `${this.selectedDates?.startDate && this.selectedDates?.endDate ? 'text-primary-400 !bg-primary-25 ' : ''}`;
 	}
 
 	setInputStartDate() {
@@ -250,9 +250,9 @@ export class DatePickerComponent implements OnInit {
 	}
 
 	getDayClassNames(day: CALENDAR_DAY): string {
-		const classNames = `w-full h-40px justify-center items-center transition-all duration-300 ease-in-out ${this.isCurrentDay(day.timestamp) && !this.isStartDay(day.timestamp) && !this.isEndDay(day.timestamp) ? '!bg-transparent !font-extrabold !text-primary-100' : ''} ${
+		const classNames = `w-full h-40px justify-center items-center transition-all duration-300 ease-in-out ${this.isCurrentDay(day.timestamp) && !this.isStartDay(day.timestamp) && !this.isEndDay(day.timestamp) ? '!bg-transparent !font-extrabold !text-primary-400' : ''} ${
 			day.month > 0 ? 'hidden' : ''
-		} ${this.isDayWithinStartAndEndDates(day.timestamp) ? 'bg-primary-400 font-medium' : ''} ${this.isInFuture(day.timestamp) && this.formType === 'filter' ? 'opacity-30 pointer-events-none' : ''} ${
+		} ${this.isDayWithinStartAndEndDates(day.timestamp) ? 'bg-primary-50' : ''} ${this.isInFuture(day.timestamp) && this.formType === 'filter' ? 'opacity-30 pointer-events-none' : ''} ${
 			this.isSelectedDay(day.timestamp) && day.month == 0 ? '!bg-primary-200 !text-white-100 font-medium' : ''
 		} ${this.isStartDay(day.timestamp) ? 'rounded-bl-8px rounded-tl-8px' : ''} ${this.isEndDay(day.timestamp) ? 'rounded-br-8px rounded-tr-8px' : ''}`;
 		return classNames;

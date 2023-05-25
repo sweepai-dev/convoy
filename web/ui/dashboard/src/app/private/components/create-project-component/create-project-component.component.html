@@ -20,7 +20,7 @@
 
 			<ng-container *ngIf="action === 'update'">
 				<label for="project-name" convoy-label>Project Id</label>
-				<div class="flex items-center justify-between w-full h-50px bg-[#F7F9FC] border border-grey-10 rounded-[6px] px-16px">
+				<div class="flex items-center justify-between w-full h-50px bg-[#F7F9FC] border border-primary-25 rounded-[6px] px-16px">
 					<span class="text-16 text-grey-60 font-normal">{{ projectDetails?.uid }}</span>
 					<convoy-copy-button [text]="projectDetails?.uid || ''" notificationText="Project ID has been copied to you clipboard."></convoy-copy-button>
 				</div>
@@ -379,7 +379,7 @@
 		</p>
 		<div class="flex items-center">
 			<button convoy-button [color]="confirmModal ? 'danger' : 'primary'" class="mr-12px px-60px" (click)="confirmRegenerateKey ? regenerateKey() : router.navigateByUrl('/')">Confirm</button>
-			<button convoy-button fill="clear" [color]="confirmModal ? 'primary' : 'danger'" class="font-semibold" (click)="confirmModal = false; confirmRegenerateKey = false">Cancel</button>
+			<button convoy-button fill="ghost" [color]="confirmModal ? 'primary' : 'danger'" class="font-semibold" (click)="confirmModal = false; confirmRegenerateKey = false">Cancel</button>
 		</div>
 	</div>
 </div>
@@ -389,7 +389,7 @@
 		<h3 class="text-16 font-semibold text-black mb-8px">Confirm Action</h3>
 		<p class="text-14 font-medium text-grey-40 text-center mb-20px">You are about to re-enable all endpoints on this project, please confirm this action</p>
 		<button convoy-button class="mb-24px" (click)="updateProject(); disableEndpointsModal = false">Confirm</button>
-		<button convoy-button fill="text" class="font-semibold" (click)="disableEndpointsModal = false; projectForm.patchValue({ config: { disable_endpoint: true } })">Close</button>
+		<button convoy-button fill="ghost" spacing="false" class="font-semibold" (click)="disableEndpointsModal = false; projectForm.patchValue({ config: { disable_endpoint: true } })">Close</button>
 	</div>
 </div>
 
@@ -399,7 +399,7 @@
 		<img src="/assets/img/warning.gif" class="h-[126px] w-[126px]" alt="warning" />
 		<p class="text-16 font-semibold text-black mb-12px text-center">Are you sure you want to disable meta events on this project?</p>
 		<button convoy-button color="danger" class="mb-24px" [disabled]="isCreatingProject" (click)="updateProject(); showMetaEventPrompt = false">Yes, Disable</button>
-		<button convoy-button fill="text" class="font-semibold" (click)="showMetaEventPrompt = false; projectForm.patchValue({ config: { meta_event: { is_enabled: true } } })">No, Cancel</button>
+		<button convoy-button fill="ghost" spacing="false" class="font-semibold" (click)="showMetaEventPrompt = false; projectForm.patchValue({ config: { meta_event: { is_enabled: true } } })">No, Cancel</button>
 	</div>
 </div>
 <!-- disable meta events prompt  -->

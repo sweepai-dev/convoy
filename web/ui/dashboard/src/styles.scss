@@ -73,4 +73,9 @@
 	* {
 		@apply font-normal;
 	}
+
+	html,
+	body {
+		@apply text-gray-800;
+	}
 }

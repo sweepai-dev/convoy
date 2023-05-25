@@ -28,6 +28,14 @@
 				<span class="text-14" *ngIf="!disableLoginBtn">Login</span>
 				<img *ngIf="disableLoginBtn" src="assets/img/button-loader.gif" alt="loader" class="h-18px" />
 			</button>
+			<button convoy-button fill="outline" [disabled]="disableLoginBtn" size="lg">
+				<span *ngIf="!disableLoginBtn">Login</span>
+				<img *ngIf="disableLoginBtn" src="assets/img/button-loader.gif" alt="loader" class="h-18px" />
+			</button>
+			<button convoy-button fill="ghost" [disabled]="disableLoginBtn" size="lg">
+				<span *ngIf="!disableLoginBtn">Login</span>
+				<img *ngIf="disableLoginBtn" src="assets/img/button-loader.gif" alt="loader" class="h-18px" />
+			</button>
 		</form>
 
 		<button convoy-button fill="link" class="mt-12px w-full" (click)="router.navigateByUrl('/signup')" size="sm">Signup</button>

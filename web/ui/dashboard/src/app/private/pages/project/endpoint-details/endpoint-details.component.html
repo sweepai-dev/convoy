@@ -11,7 +11,7 @@
 	<svg width="16" height="16" class="mx-4px fill-dark-grey">
 		<use xlink:href="#arrow-right-icon"></use>
 	</svg>
-	<span class="font-medium text-primary-100">{{ endpointDetails?.title || 'Endpoint' }}</span>
+	<span class="font-medium text-primary-400">{{ endpointDetails?.title || 'Endpoint' }}</span>
 </div>
 
 <div convoy-card class="p-20px mb-20px">
@@ -20,7 +20,7 @@
 			<div>
 				<h3 class="font-semibold capitalize flex items-center">
 					{{ endpointDetails.title }}
-					<span convoy-tag [type]="endpointDetails.status === 'active' ? 'success' : 'grey'" class="ml-8px text-10">{{ endpointDetails.status }}</span>
+					<span convoy-tag [type]="endpointDetails.status === 'active' ? 'success' : 'gray'" class="ml-8px text-10">{{ endpointDetails.status }}</span>
 				</h3>
 				<p class="text-12 text-grey-60 mt-6px">{{ endpointDetails.target_url }}</p>
 			</div>
@@ -29,7 +29,7 @@
 				<div class="flex items-center border border-primary-100 rounded-[10px] h-34px">
 					<button
 						convoy-button
-						fill="clear"
+						fill="ghost"
 						*ngIf="privateService.activeProjectDetails?.type === 'outgoing'; else pause_endpoint"
 						[disabled]="isSendingTestEvent"
 						[ngClass]="{ 'cursor-wait': isSendingTestEvent }"
@@ -41,13 +41,13 @@
 					</button>
 
 					<ng-template #pause_endpoint>
-						<button convoy-button convoy-permission="Endpoints|MANAGE" size="sm" fill="clear" class="w-full !justify-start" *ngIf="endpointDetails.status === 'active'" (click)="toggleEndpoint()" [disabled]="isTogglingEndpoint">
+						<button convoy-button convoy-permission="Endpoints|MANAGE" size="sm" fill="ghost" class="w-full !justify-start" *ngIf="endpointDetails.status === 'active'" (click)="toggleEndpoint()" [disabled]="isTogglingEndpoint">
 							<svg width="16" height="16" class="mr-8px fill-primary-100">
 								<use xlink:href="#pause-icon"></use>
 							</svg>
 							{{ isTogglingEndpoint ? 'Pausing endpoint...' : 'Pause Endpoint' }}
 						</button>
-						<button convoy-permission="Endpoints|MANAGE" convoy-button size="sm" fill="clear" class="w-full !justify-start" *ngIf="endpointDetails.status === 'paused'" (click)="toggleEndpoint()" [disabled]="isTogglingEndpoint">
+						<button convoy-permission="Endpoints|MANAGE" convoy-button size="sm" fill="ghost" class="w-full !justify-start" *ngIf="endpointDetails.status === 'paused'" (click)="toggleEndpoint()" [disabled]="isTogglingEndpoint">
 							<svg width="16" height="16" class="mr-8px fill-primary-100">
 								<use xlink:href="#play-icon"></use>
 							</svg>
@@ -56,7 +56,7 @@
 					</ng-template>
 
 					<div convoy-dropdown position="right" size="md" class="border-l border-primary-100">
-						<button dropdownTrigger convoy-button size="sm" fill="clear" class="!px-6px !py-0">
+						<button dropdownTrigger convoy-button size="sm" fill="ghost" class="!px-6px !py-0">
 							<svg width="16" height="16" class="fill-primary-100">
 								<use xlink:href="#angle-arrow-down-icon"></use>
 							</svg>
@@ -64,7 +64,7 @@
 
 						<ul dropdownOptions>
 							<li class="border-b border-grey-20" *ngIf="privateService.activeProjectDetails?.type === 'outgoing'">
-								<button convoy-dropdown-option convoy-button size="sm" fill="clear" class="w-full !justify-start" (click)="viewEndpointPortalLinks(endpointDetails.uid)">
+								<button convoy-dropdown-option convoy-button size="sm" fill="ghost" class="w-full !justify-start" (click)="viewEndpointPortalLinks(endpointDetails.uid)">
 									<svg width="18" height="18" class="stroke-primary-100 mr-8px">
 										<use xlink:href="#portal-icon"></use>
 									</svg>
@@ -74,7 +74,7 @@
 							</li>
 							<ng-container *ngIf="privateService.activeProjectDetails?.type === 'outgoing'">
 								<li class="border-b border-grey-20" *ngIf="endpointDetails.status === 'active'">
-									<button convoy-permission="Endpoints|MANAGE" convoy-button size="sm" fill="clear" class="w-full !justify-start" (click)="toggleEndpoint()" [disabled]="isTogglingEndpoint">
+									<button convoy-permission="Endpoints|MANAGE" convoy-button size="sm" fill="ghost" class="w-full !justify-start" (click)="toggleEndpoint()" [disabled]="isTogglingEndpoint">
 										<svg width="16" height="16" class="mr-8px fill-primary-100">
 											<use xlink:href="#pause-icon"></use>
 										</svg>
@@ -82,7 +82,7 @@
 									</button>
 								</li>
 								<li class="border-b border-grey-20" *ngIf="endpointDetails.status === 'paused'">
-									<button convoy-permission="Endpoints|MANAGE" convoy-button size="sm" fill="clear" class="w-full !justify-start" (click)="toggleEndpoint()" [disabled]="isTogglingEndpoint">
+									<button convoy-permission="Endpoints|MANAGE" convoy-button size="sm" fill="ghost" class="w-full !justify-start" (click)="toggleEndpoint()" [disabled]="isTogglingEndpoint">
 										<svg width="16" height="16" class="mr-8px fill-primary-100">
 											<use xlink:href="#play-icon"></use>
 										</svg>
@@ -91,7 +91,7 @@
 								</li>
 							</ng-container>
 							<li class="border-b border-grey-20">
-								<button convoy-dropdown-option convoy-button size="sm" fill="clear" class="w-full !justify-start" [routerLink]="'./edit'" [relativeTo]="route">
+								<button convoy-dropdown-option convoy-button size="sm" fill="ghost" class="w-full !justify-start" [routerLink]="'./edit'" [relativeTo]="route">
 									<svg width="16" height="16" class="mr-8px fill-primary-100">
 										<use xlink:href="#edit-icon"></use>
 									</svg>
@@ -99,7 +99,7 @@
 								</button>
 							</li>
 							<li>
-								<button convoy-permission="Endpoints|MANAGE" convoy-dropdown-option convoy-button size="sm" fill="clear" color="danger" class="w-full !justify-start" (click)="showDeleteModal = true">
+								<button convoy-permission="Endpoints|MANAGE" convoy-dropdown-option convoy-button size="sm" fill="ghost" color="danger" class="w-full !justify-start" (click)="showDeleteModal = true">
 									<svg width="16" height="16" class="mr-8px fill-danger-100">
 										<use xlink:href="#delete-icon"></use>
 									</svg>
@@ -169,7 +169,7 @@
 			</div>
 			<div>
 				<p class="text-grey-40 text-12 font-light">SECRET</p>
-				<button convoy-button size="sm" fill="text" (click)="showEndpointSecret = true">
+				<button convoy-button size="sm" fill="ghost" spacing="false" (click)="showEndpointSecret = true">
 					View Secret
 					<img src="/assets/img/arrow-up-right.svg" class="w-14px" alt="link out" />
 				</button>

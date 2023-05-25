@@ -26,17 +26,17 @@
 
 <!-- personal access token  -->
 <ng-container *ngIf="!isFetchingKeys && personalAccessKeys && !showCreateNewTokenForm">
-	<div class="flex justify-between items-center py-12px border-b border-b-grey-10 last-of-type:border-none" *ngFor="let key of personalAccessKeys?.content">
+	<div class="flex justify-between items-center py-12px border-b border-b-primary-25 last-of-type:border-none" *ngFor="let key of personalAccessKeys?.content">
 		<div>
 			<div class="flex items-center">
 				<p class="font-medium text-12 mr-14px">{{ key.name }}</p>
-				<convoy-tag [type]="getKeyStatus(key.expires_at) | statuscolor">{{ getKeyStatus(key.expires_at) }}</convoy-tag>
+				<div convoy-tag [color]="getKeyStatus(key.expires_at) | statuscolor">{{ getKeyStatus(key.expires_at) }}</div>
 			</div>
 			<p class="text-grey-40 text-10 mt-8px">
 				<span *ngIf="key.expires_at">Expires At: ({{ key.expires_at | date: 'mediumDate' }})</span>
 			</p>
 		</div>
-		<button convoy-button size="sm" fill="text" color="danger" (click)="selectedKey = key; showRevokeKeyModal = true" *ngIf="getKeyStatus(key.expires_at) === 'active'">
+		<button convoy-button size="sm" fill="ghost" spacing="false" color="danger" (click)="selectedKey = key; showRevokeKeyModal = true" *ngIf="getKeyStatus(key.expires_at) === 'active'">
 			<svg width="16" height="16" class="mr-8px fill-danger-100">
 				<use xlink:href="#delete-icon"></use>
 			</svg>

@@ -17,13 +17,13 @@
 		</convoy-tooltip>
 	</div>
 
-	<div class="flex px-16px py-24px border-b border-grey-10 items-center justify-between">
+	<div class="flex px-16px py-24px border-b border-primary-25 items-center justify-between">
 		<div class="flex">
 			<convoy-date-picker (selectedDateRange)="getSelectedDateRange($event)" [dateRangeValue]="{ startDate: queryParams?.startDate || '', endDate: queryParams?.endDate || '' }" (clearDates)="clearFilters('startDate')" #datePicker></convoy-date-picker>
 			<convoy-time-picker class="ml-14px" [dateRangeValue]="{ startDate: queryParams?.startDate || '', endDate: queryParams?.endDate || '' }" (applyFilter)="getSelectedTimeRange($event)" #eventDeliveryTimerFilter></convoy-time-picker>
 
 			<div convoy-dropdown size="md" position="left" #statusDropdown>
-				<button dropdownTrigger convoy-button size="sm" fill="outline" class="px-10px !border-primary-400 ml-16px min-w-[117px] whitespace-nowrap justify-between h-36px" [ngClass]="{ 'text-primary-100 !bg-primary-500': queryParams?.status }">
+				<button dropdownTrigger convoy-button size="sm" fill="outline" class="px-10px !border-primary-400 ml-16px min-w-[117px] whitespace-nowrap justify-between h-36px" [ngClass]="{ 'text-primary-400 !bg-primary-25': queryParams?.status }">
 					<img src="/assets/img/status-filter-icon.svg" class="w-14px mr-10px" alt="status filter icon" />
 					<span class="text-grey-40 w-full">Status</span>
 					<img class="ml-10px mr-0px w-14px" src="/assets/img/angle-arrow-down.svg" alt="arrow down icon" />
@@ -45,7 +45,7 @@
 			</div>
 
 			<div convoy-dropdown size="lg" position="left" #endpointsFilterDropdown [hidden]="portalToken || this.projectService.activeProjectDetails?.type === 'incoming'">
-				<button dropdownTrigger convoy-button size="sm" fill="outline" class="px-10px !border-primary-400 ml-16px min-w-[117px] whitespace-nowrap justify-between h-36px" [ngClass]="{ 'text-primary-100 !bg-primary-500': queryParams?.endpointId }">
+				<button dropdownTrigger convoy-button size="sm" fill="outline" class="px-10px !border-primary-400 ml-16px min-w-[117px] whitespace-nowrap justify-between h-36px" [ngClass]="{ 'text-primary-400 !bg-primary-25': queryParams?.endpointId }">
 					<img src="/assets/img/apps-icon-grey.svg" class="w-14px mr-10px" alt="apps filter icon" />
 					<span class="text-grey-40 w-full">All Endpoints</span>
 					<img class="ml-10px mr-0px w-14px" src="/assets/img/angle-arrow-down.svg" alt="arrow down icon" />
@@ -72,7 +72,7 @@
 			</div>
 
 			<div convoy-dropdown size="lg" position="left" #sourcesFilterDropdown [hidden]="portalToken || this.projectService.activeProjectDetails?.type === 'outgoing'">
-				<button dropdownTrigger convoy-button size="sm" fill="outline" class="px-10px !border-primary-400 ml-16px min-w-[117px] whitespace-nowrap justify-between h-36px" [ngClass]="{ 'text-primary-100 !bg-primary-500': queryParams?.sourceId }">
+				<button dropdownTrigger convoy-button size="sm" fill="outline" class="px-10px !border-primary-400 ml-16px min-w-[117px] whitespace-nowrap justify-between h-36px" [ngClass]="{ 'text-primary-400 !bg-primary-25': queryParams?.sourceId }">
 					<img src="/assets/img/apps-icon-grey.svg" class="w-14px mr-10px" alt="apps filter icon" />
 					<span class="text-grey-40 w-full">All Sources</span>
 					<img class="ml-10px mr-0px w-14px" src="/assets/img/angle-arrow-down.svg" alt="arrow down icon" />
@@ -93,7 +93,7 @@
 				</ng-container>
 			</div>
 
-			<div class="text-primary-100 bg-primary-500 border border-primary-100 ml-14px flex items-center justify-between text-12 rounded-[10px] h-36px py-4px px-10px min-w-[100px] font-medium" *ngIf="queryParams?.eventId">
+			<div class="text-primary-400 bg-primary-25 border border-primary-100 ml-14px flex items-center justify-between text-12 rounded-[10px] h-36px py-4px px-10px min-w-[100px] font-medium" *ngIf="queryParams?.eventId">
 				Event Filtered
 				<button class="ml-4px">
 					<img class="w-14px" src="assets/img/close-icon.svg" alt="close icon" (click)="clearFilters('eventId')" />
@@ -198,6 +198,6 @@
 		<div class="text-center text-16 font-medium text-grey-60 mb-8px">The filters applied will affect</div>
 		<div class="text-center text-16 font-semibold mb-32px">{{ batchRetryCount || 0 }} event deliver{{ batchRetryCount > 1 ? 'ies' : 'y' }}</div>
 		<button convoy-button [disabled]="isRetrying || batchRetryCount == 0" class="m-auto" (click)="batchRetryEvent()">{{ isRetrying ? 'Retrying Events...' : 'Yes, Apply' }}</button>
-		<button convoy-button fill="clear" class="font-semibold m-auto" (click)="showBatchRetryModal = false">No, Cancel</button>
+		<button convoy-button fill="ghost" class="font-semibold m-auto" (click)="showBatchRetryModal = false">No, Cancel</button>
 	</div>
 </div>

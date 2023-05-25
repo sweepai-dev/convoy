@@ -16,7 +16,7 @@ export class NotificationComponent implements OnInit {
 	statusTypes = {
 		warning: 'bg-warning-500 text-warning-100',
 		error: 'bg-danger-500 text-danger-100',
-		info: 'bg-primary-500 text-primary-100',
+		info: 'bg-primary-25 text-primary-400',
 		success: 'bg-success-500 text-success-100'
 	};
 	constructor(private generalService: GeneralService) {}

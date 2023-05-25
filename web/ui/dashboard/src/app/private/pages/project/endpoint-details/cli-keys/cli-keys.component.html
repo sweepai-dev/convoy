@@ -20,16 +20,16 @@
 
 	<!-- fetched api keys  -->
 	<ng-container *ngIf="!isFetchingApiKeys && apiKeys">
-		<div class="flex justify-between items-center pb-10px px-22px mt-24px bg-[#fcfcfc] border-b border-b-grey-10 last-of-type:border-none" *ngFor="let key of apiKeys">
+		<div class="flex justify-between items-center pb-10px px-22px mt-24px bg-[#fcfcfc] border-b border-b-primary-25 last-of-type:border-none" *ngFor="let key of apiKeys">
 			<div>
 				<div class="flex items-center mb-8px">
 					<p class="text-12 font-medium mr-36px">{{ key.name }}</p>
-					<convoy-tag type="grey" className="mr-16px">{{ key.role.type }}</convoy-tag>
+					<convoy-tag type="gray" className="mr-16px">{{ key.role.type }}</convoy-tag>
 					<convoy-tag [type]="getKeyStatus(key.expires_at) | statuscolor">{{ getKeyStatus(key.expires_at) }}</convoy-tag>
 				</div>
 				<p class="text-grey-40 text-12 mt-8px">Expires At: {{ key.expires_at | date: 'medium' }}</p>
 			</div>
-			<button convoy-button size="xs" fill="text" color="danger" class="font-medium" (click)="selectedApiKey = key; showRevokeApiModal = true" *ngIf="getKeyStatus(key.expires_at) === 'active'">Revoke</button>
+			<button convoy-button size="xs" fill="ghost" spacing="false" color="danger" class="font-medium" (click)="selectedApiKey = key; showRevokeApiModal = true" *ngIf="getKeyStatus(key.expires_at) === 'active'">Revoke</button>
 		</div>
 	</ng-container>
 </div>
@@ -45,7 +45,7 @@
 		</button>
 	</div>
 
-    <form class="p-20px" [formGroup]="generateKeyForm" (ngSubmit)="generateNewKey()">
+	<form class="p-20px" [formGroup]="generateKeyForm" (ngSubmit)="generateNewKey()">
 		<ng-container *ngIf="token">
 			<convoy-select label="Endpoint" name="endpoint_id" formControlName="endpoint_id" [options]="endpoints" [value]="endpointId" [required]="true" errorMessage="Endpoint Id is required" (selectedOption)="setEndpointId($event)"></convoy-select>
 		</ng-container>

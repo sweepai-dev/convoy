@@ -10,11 +10,12 @@ import { PageDirective } from 'src/app/components/page/page.component';
 import { EmptyStateComponent } from 'src/app/components/empty-state/empty-state.component';
 import { CardComponent } from 'src/app/components/card/card.component';
 import { PermissionDirective } from '../../components/permission/permission.directive';
+import { TagComponent } from 'src/app/components/tag/tag.component';
 
 const routes: Routes = [{ path: '', component: ProjectsComponent }];
 
 @NgModule({
 	declarations: [ProjectsComponent],
-	imports: [CommonModule, RouterModule.forChild(routes), CreateOrganisationModule, LoaderModule, ButtonComponent, ModalComponent, PageDirective, EmptyStateComponent, CardComponent, PermissionDirective]
+	imports: [CommonModule, RouterModule.forChild(routes), CreateOrganisationModule, LoaderModule, ButtonComponent, ModalComponent, PageDirective, EmptyStateComponent, CardComponent, PermissionDirective, TagComponent]
 })
 export class ProjectsModule {}

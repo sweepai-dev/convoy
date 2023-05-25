@@ -13,9 +13,9 @@ import { OverlayDirective } from '../overlay/overlay.directive';
 			<div class="flex justify-between items-center max-w-[834px] m-auto">
 				<ng-content></ng-content>
 
-				<a *ngIf="fullscreen === 'true'" convoy-button fill="text" target="_blank" href="https://getconvoy.io/docs" rel="noreferrer">
+				<a *ngIf="fullscreen === 'true'" convoy-button fill="ghost" spacing="false" target="_blank" href="https://getconvoy.io/docs" rel="noreferrer">
 					<img src="/assets/img/doc-icon-primary.svg" alt="doc icon" />
-					<span class="font-medium text-14 text-primary-100 ml-2">Go to docs</span>
+					<span class="font-medium text-14 text-primary-400 ml-2">Go to docs</span>
 				</a>
 			</div>
 		</div>

@@ -143,7 +143,7 @@
 						<label for="service_account" required="true" convoy-label required="true" tooltip="Service accounts provide a way to manage authentication into your Google Pub/Sub.">Service Account</label>
 						<convoy-file-input (selectedFile)="parseJsonFile($event)" (deleteFile)="deleteJsonFile()">
 							<p class="text-center text-12 text-grey-60 max-w-[186px] mx-auto">
-								<span class="text-primary-100 font-bold">Click to {{ action === 'update' ? 'update' : 'upload' }}</span>
+								<span class="text-primary-400 font-bold">Click to {{ action === 'update' ? 'update' : 'upload' }}</span>
 								or drag and drop JSON (max 5kb)
 							</p>
 						</convoy-file-input>
@@ -220,7 +220,7 @@
 		<p class="text-14 font-medium text-grey-40 mb-24px">You are about to discard this process, please confirm this action.</p>
 		<div class="flex items-center">
 			<button convoy-button color="danger" class="mr-12px px-60px" (click)="onAction.emit({ action: 'close' })">Confirm</button>
-			<button convoy-button fill="clear" [color]="confirmModal ? 'primary' : 'danger'" class="font-semibold" (click)="confirmModal = false">Cancel</button>
+			<button convoy-button fill="ghost" [color]="confirmModal ? 'primary' : 'danger'" class="font-semibold" (click)="confirmModal = false">Cancel</button>
 		</div>
 	</div>
 </div>

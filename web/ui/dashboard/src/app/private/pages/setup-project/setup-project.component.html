@@ -9,7 +9,7 @@
 		</div>
 	</div>
 
-    <div  class="max-w-[834px] m-auto pb-60px flex flex-col">
+	<div class="max-w-[834px] m-auto pb-60px flex flex-col">
 		<convoy-loader *ngIf="showLoader"></convoy-loader>
 
 		<ng-container *ngIf="projectType === 'incoming'">
@@ -45,7 +45,7 @@
 						<p class="text-grey-60 text-12 mt-6px max-w-[348px]">Connect your Google Pub/Sub or AWS SQS to automatically trigger events to endpoints once there is a new message on the queue</p>
 
 						<!-- pending when documentation is ready  -->
-						<!-- <a convoy-button size="sm" fill="text" type="button" class="font-medium !justify-start" href="https://getconvoy.io/docs/manual/subscriptions#subscription-filters" target="_blank" referrerpolicy="noreferrer">
+						<!-- <a convoy-button size="sm" fill="ghost" spacing="false" type="button" class="font-medium !justify-start" href="https://getconvoy.io/docs/manual/subscriptions#subscription-filters" target="_blank" referrerpolicy="noreferrer">
 							Read more here
 							<svg width="24" height="24" class="ml-8px" class="fill-primary-100">
 								<use xlink:href="#arrow-right-icon"></use>

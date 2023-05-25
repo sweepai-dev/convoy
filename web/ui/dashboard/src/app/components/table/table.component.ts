@@ -37,7 +37,7 @@ export class TableCellComponent implements OnInit {
 	selector: 'convoy-table-head, [convoy-table-head]',
 	standalone: true,
 	imports: [CommonModule],
-	host: { class: 'bg-primary-500' },
+	host: { class: 'bg-primary-25' },
 	template: `
 		<tr>
 			<ng-content></ng-content>
@@ -81,6 +81,6 @@ export class TableRowComponent implements OnInit {
 	ngOnInit(): void {}
 
 	get getClassNames() {
-		return `${this.forDate ? 'border-t border-grey-10 ' : 'hover:bg-primary-500 transition-all duration-300'} ${this.active ? 'bg-primary-500' : ''}`;
+		return `${this.forDate ? 'border-t border-primary-25 ' : 'hover:bg-primary-25 transition-all duration-300'} ${this.active ? 'bg-primary-25' : ''}`;
 	}
 }

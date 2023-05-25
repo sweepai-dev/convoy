@@ -32,9 +32,9 @@
 				</div>
 				<label class="w-full text-12 text-grey-40" for="tagInput">Event Types</label>
 				<div (click)="focusInput()" class="w-full font-medium text-14 text-grey-100 border border-primary-500 outline-none rounded-4px bg-[#F7F9FC] pt-12px pb-8px px-12px mt-8px relative flex flex-row flex-wrap items-center">
-					<div *ngFor="let tag of eventTags" class="border border-grey-10 bg-grey-10 px-4px font-medium text-12 mr-1 mb-1 rounded-4px flex items-center">
+					<div *ngFor="let tag of eventTags" class="border border-primary-25 bg-grey-10 px-4px font-medium text-12 mr-1 mb-1 rounded-4px flex items-center">
 						{{ tag }}
-						<button convoy-button *ngIf="action !== 'view'" (click)="removeEventTag(tag)" fill="text" type="button" class="py-0 px-0"><img src="/assets/img/close-icon-black.svg" width="12px" class="ml-4px" alt="close icon" /></button>
+						<button convoy-button *ngIf="action !== 'view'" (click)="removeEventTag(tag)" fill="ghost" spacing="false" type="button" class="py-0 px-0"><img src="/assets/img/close-icon-black.svg" width="12px" class="ml-4px" alt="close icon" /></button>
 					</div>
 					<input type="text" id="tagInput" (input)="addTag()" required class="text-12 bg-[#F7F9FC] focus:outline-none focus:border-none" [readonly]="action === 'view'" autocomplete="off" />
 				</div>
@@ -99,13 +99,13 @@
 				</div>
 
 				<div class="flex justify-between items-center">
-					<a convoy-button size="sm" fill="text" type="button" class="font-medium !justify-start" href="https://getconvoy.io/docs/manual/subscriptions#subscription-filters" target="_blank" referrerpolicy="noreferrer">
+					<a convoy-button size="sm" fill="ghost" spacing="false" type="button" class="font-medium !justify-start" href="https://getconvoy.io/docs/manual/subscriptions#subscription-filters" target="_blank" referrerpolicy="noreferrer">
 						Learn more about filters here
 						<svg width="24" height="24" class="ml-8px" class="fill-primary-100">
 							<use xlink:href="#arrow-right-icon"></use>
 						</svg>
 					</a>
-					<button convoy-button fill="text" size="sm" className="font-medium" type="button" (click)="setupFilter()">
+					<button convoy-button fill="ghost" spacing="false" size="sm" className="font-medium" type="button" (click)="setupFilter()">
 						{{ action === 'update' ? 'Edit' : 'Setup' }} Filter
 						<svg width="16" height="16" class="ml-10px" class="fill-primary-100">
 							<use xlink:href="#plus-icon"></use>
@@ -143,7 +143,7 @@
 					(selectedOption)="subscriptionForm.patchValue({ source_id: $event })"
 				></convoy-select>
 
-				<button convoy-button convoy-permission="Subscriptions|MANAGE" fill="text" type="button" class="mt-24px text-14 font-medium" (click)="showCreateSourceForm = true; subscriptionForm.patchValue({ source_id: null })">
+				<button convoy-button convoy-permission="Subscriptions|MANAGE" fill="ghost" spacing="false" type="button" class="mt-24px text-14 font-medium" (click)="showCreateSourceForm = true; subscriptionForm.patchValue({ source_id: null })">
 					<svg width="20" height="20" class="mr-8px" fill="currentColor">
 						<use xlink:href="#plus-icon"></use>
 					</svg>
@@ -152,7 +152,7 @@
 			</div>
 
 			<convoy-create-source *ngIf="showCreateSourceForm" (onAction)="$event?.action === 'close' ? (showCreateSourceForm = false) : onCreateSource($event.data)">
-				<button convoy-permission="Subscriptions|MANAGE" convoy-button fill="text" type="button" class="mt-24px text-14 font-medium" (click)="showCreateSourceForm = false; subscriptionForm.patchValue({ source_id: null })">
+				<button convoy-permission="Subscriptions|MANAGE" convoy-button fill="ghost" spacing="false" type="button" class="mt-24px text-14 font-medium" (click)="showCreateSourceForm = false; subscriptionForm.patchValue({ source_id: null })">
 					<svg width="20" height="20" class="mr-8px" fill="currentColor">
 						<use xlink:href="#plus-icon"></use>
 					</svg>
@@ -176,7 +176,7 @@
 				[required]="true"
 			></convoy-select>
 
-			<button convoy-button convoy-permission="Subscriptions|MANAGE" fill="text" type="button" class="mt-24px text-14 font-medium" (click)="showCreateEndpointForm = true; subscriptionForm.patchValue({ endpoint_id: null })" *ngIf="!token">
+			<button convoy-button convoy-permission="Subscriptions|MANAGE" fill="ghost" spacing="false" type="button" class="mt-24px text-14 font-medium" (click)="showCreateEndpointForm = true; subscriptionForm.patchValue({ endpoint_id: null })" *ngIf="!token">
 				<svg width="20" height="20" class="mr-8px" fill="currentColor">
 					<use xlink:href="#plus-icon"></use>
 				</svg>
@@ -185,7 +185,7 @@
 		</div>
 
 		<convoy-create-endpoint *ngIf="showCreateEndpointForm" (onAction)="$event.action === 'close' ? (showCreateEndpointForm = false) : onCreateEndpoint($event.data)">
-			<button convoy-permission="Subscriptions|MANAGE" convoy-button fill="text" type="button" class="mt-24px text-14 font-medium" (click)="showCreateEndpointForm = false; subscriptionForm.patchValue({ endpoint_id: null })" *ngIf="!token">
+			<button convoy-permission="Subscriptions|MANAGE" convoy-button fill="ghost" spacing="false" type="button" class="mt-24px text-14 font-medium" (click)="showCreateEndpointForm = false; subscriptionForm.patchValue({ endpoint_id: null })" *ngIf="!token">
 				<svg width="20" height="20" class="mr-8px" fill="currentColor">
 					<use xlink:href="#plus-icon"></use>
 				</svg>
@@ -232,7 +232,7 @@
 		<p class="text-14 font-medium text-grey-40 mb-24px">You are about to discard this process, please confirm this action.</p>
 		<div class="flex items-center">
 			<button convoy-button color="danger" class="mr-12px px-60px" (click)="onAction.emit({ action: 'close' })">Confirm</button>
-			<button convoy-button fill="clear" [color]="confirmModal ? 'primary' : 'danger'" class="font-semibold" (click)="confirmModal = false">Cancel</button>
+			<button convoy-button fill="ghost" [color]="confirmModal ? 'primary' : 'danger'" class="font-semibold" (click)="confirmModal = false">Cancel</button>
 		</div>
 	</div>
 </div>
