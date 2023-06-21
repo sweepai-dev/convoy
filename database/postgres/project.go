@@ -164,8 +164,21 @@ const (
 	SET deleted_at = now()
 	WHERE project_id = $1 AND deleted_at IS NULL;
 	`
-	deleteProjectEndpointSubscriptions = `
+
+	deleteProjectEventDeliveries = `
+	UPDATE convoy.event_deliveries
+	SET deleted_at = now()
+	WHERE project_id = $1 AND deleted_at IS NULL;
+	`
+
+	deleteProjectSubscriptions = `
 	UPDATE convoy.subscriptions SET
+	deleted_at = now()
+	WHERE project_id = $1 AND deleted_at IS NULL;
+	`
+
+	deleteProjectSources = `
+	UPDATE convoy.sources SET
 	deleted_at = now()
 	WHERE project_id = $1 AND deleted_at IS NULL;
 	`
@@ -380,7 +393,7 @@ func (p *projectRepo) FillProjectsStatistics(ctx context.Context, project *datas
 }
 
 func (p *projectRepo) DeleteProject(ctx context.Context, id string) error {
-	tx, err := p.db.BeginTxx(ctx, &sql.TxOptions{})
+	tx, err := p.db.BeginTxx(ctx, nil)
 	if err != nil {
 		return err
 	}
@@ -401,7 +414,17 @@ func (p *projectRepo) DeleteProject(ctx context.Context, id string) error {
 		return err
 	}
 
-	_, err = tx.ExecContext(ctx, deleteProjectEndpointSubscriptions, id)
+	_, err = tx.ExecContext(ctx, deleteProjectEventDeliveries, id)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(ctx, deleteProjectSources, id)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(ctx, deleteProjectSubscriptions, id)
 	if err != nil {
 		return err
 	}
