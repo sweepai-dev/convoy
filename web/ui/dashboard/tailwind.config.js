@@ -27,8 +27,6 @@ module.exports = {
 		'bg-success-50',
 		'bg-primary-50',
 		'bg-warning-500',
-		'text-warning-100',
-		'bg-danger-500',
 		'text-danger-100',
 		'text-grey-40',
 		'bg-grey-10',
@@ -36,15 +34,30 @@ module.exports = {
 		'bg-danger-100',
 
 		'text-new.primary-400',
-		'bg-new.primary-25',
-		'bg-new.gray-50',
-		'text-new.error-400',
-		'bg-new.success-25',
-		'bg-new.success-50',
 		'text-new.success-400',
-		'bg-new.primary-50',
-		'bg-new.error-50',
-		'text-new.gray-400'
+		'text-new.warning-400',
+		'text-new.danger-400',
+		'text-new.gray-800',
+		'border-new.primary-400',
+		'border-new.success-400',
+		'border-new.warning-400',
+		'border-new.danger-400',
+		'border-new.gray-600',
+		'border-new.gray-300',
+		'border-new.gray-100',
+		'border-new.primary-50',
+		'border-new.warning-50',
+		'border-new.danger-50',
+		'border-new.success-50',
+		'bg-new.primary-400',
+		'bg-new.primary-25',
+		'bg-new.gray-100',
+		'bg-new.warning-50',
+		'bg-new.success-50',
+		'bg-new.danger-50',
+		'text-new.danger-400',
+		'text-new.gray-400',
+		'text-new.gray-600',
 	],
 	theme: {
 		extend: {
@@ -130,7 +143,7 @@ module.exports = {
 				800: '#05603A,',
 				900: '#054F31,'
 			},
-			'new.error': {
+			'new.danger': {
 				25: '#FFFBFA',
 				50: '#FEF3F2',
 				100: '#FEE4E2',
@@ -157,7 +170,7 @@ module.exports = {
 				900: '#7A2E0E,'
 			},
 			'new.gray': {
-				25: '#FCFCFD',
+				25: '#E8E8E9',
 				50: '#F9FAFB',
 				100: '#F2F4F7',
 				200: '#E4E7EC',

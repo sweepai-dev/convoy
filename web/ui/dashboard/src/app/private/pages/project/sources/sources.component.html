@@ -21,7 +21,7 @@
 
 <ng-container *ngIf="!isLoadingSources && sources?.content?.length">
 	<!-- list of sources  -->
-	<div class="p-24px min-h-[600px]" convoy-card>
+	<div class="min-h-[600px]">
 		<div class="flex flex-wrap gap-24px">
 			<ng-container *ngFor="let source of sources?.content; let i = index">
 				<div convoy-card [id]="'source' + i" class="w-full max-w-[338px] min-w-[300px] py-20px h-fit">
@@ -37,12 +37,12 @@
 							</div>
 
 							<div convoy-dropdown position="left" size="sm" class="ml-4px">
-								<button dropdownTrigger convoy-button size="sm" fill="clear" class="!p-0">
+								<button dropdownTrigger convoy-button size="sm" fill="text" class="!p-0">
 									<img src="assets/img/more-icon-vertical.svg" class="h-5" alt="more icon" />
 								</button>
 								<ul dropdownOptions>
 									<li class="border-b border-grey-20">
-										<button convoy-dropdown-option convoy-button size="sm" fill="clear" class="w-full !justify-start" [routerLink]="'./' + source?.uid">
+										<button convoy-dropdown-option convoy-button size="sm" fill="text" class="w-full !justify-start" [routerLink]="'./' + source?.uid">
 											<svg width="16" height="16" class="mr-8px fill-primary-100">
 												<use xlink:href="#edit-icon"></use>
 											</svg>
@@ -50,8 +50,8 @@
 										</button>
 									</li>
 									<li>
-										<button convoy-permission="Sources|MANAGE" convoy-dropdown-option convoy-button size="sm" fill="clear" color="danger" class="w-full !justify-start" (click)="activeSource = source; showDeleteSourceModal = true">
-											<svg width="16" height="16" class="mr-8px fill-transparent stroke-new.error-400">
+										<button convoy-permission="Sources|MANAGE" convoy-dropdown-option convoy-button size="sm" fill="text" color="danger" class="w-full !justify-start" (click)="activeSource = source; showDeleteSourceModal = true">
+											<svg width="16" height="16" class="mr-8px fill-transparent stroke-new.danger-400">
 												<use xlink:href="#delete-icon2"></use>
 											</svg>
 											Delete
@@ -70,28 +70,28 @@
 								<div class="text-14 text-new.gray-800 font-medium">{{ source.name }}</div>
 
 								<div convoy-dropdown #incomingSourceDropdown position="left" size="md" class="ml-4px">
-									<button dropdownTrigger convoy-button size="sm" fill="clear" class="!p-0">
+									<button dropdownTrigger convoy-button size="sm" fill="text" class="!p-0">
 										<img src="assets/img/more-icon-vertical.svg" class="h-5" alt="more icon" />
 									</button>
 
 									<ul dropdownOptions class="p-10px">
-										<li class="mb-4px rounded-8px py-4px px-6px hover:bg-new.primary-25 duration-300 transition-all">
+										<li class="mb-4px rounded-8px px-6px hover:bg-new.primary-25 duration-300 transition-all">
 											<div convoy-copy-button show-icon="false" class="w-full" color="gray" size="sm" (copyText)="hideIncomingSourceDropdown()" [notificationText]="source.name + ' ID has been copied to clipboard'" [text]="source?.uid || ''">
-												<svg width="16" height="16" class="stroke-new.gray-600">
+												<svg width="16" height="16" class="ml-2px stroke-new.gray-600">
 													<use xlink:href="#copy-icon-3"></use>
 												</svg>
 												<span class="pl-8px text-new.gray-600">Copy ID</span>
 											</div>
 										</li>
-										<li class="mb-4px rounded-8px py-4px px-6px hover:bg-new.primary-25 duration-300 transition-all">
-											<button convoy-dropdown-option convoy-button color="grey" size="sm" fill="text" class="w-full !justify-start" [routerLink]="'./' + source?.uid">
+										<li class="mb-4px rounded-8px px-6px hover:bg-new.primary-25 duration-300 transition-all">
+											<button convoy-dropdown-option convoy-button color="gray" size="sm" fill="text" class="w-full !justify-start" [routerLink]="'./' + source?.uid">
 												<svg width="17" height="16" class="fill-new.gray-600 mr-8px">
 													<use xlink:href="#edit-icon"></use>
 												</svg>
 												Edit
 											</button>
 										</li>
-										<li class="mb-4px rounded-8px py-4px px-6px hover:bg-new.primary-25 duration-300 transition-all">
+										<li class="mb-4px rounded-8px px-6px hover:bg-new.primary-25 duration-300 transition-all">
 											<button convoy-permission="Sources|MANAGE" convoy-dropdown-option convoy-button size="sm" fill="text" color="danger" class="w-full !justify-start" (click)="activeSource = source; showDeleteSourceModal = true">
 												<svg width="16" height="16" class="mr-8px fill-danger-100">
 													<use xlink:href="#delete-icon"></use>
@@ -119,7 +119,7 @@
 <div convoy-modal *ngIf="shouldShowCreateSourceModal || shouldShowUpdateSourceModal" position="full" [id]="'sourceForm'" (closeModal)="closeCreateSourceModal({ action: 'close' })">
 	<div convoy-modal-header fullscreen="true">
 		<div class="flex items-center">
-			<button convoy-button size="sm" texture="light" class="px-10px !py-10px" (click)="closeCreateSourceModal({ action: 'close' })">
+			<button convoy-button size="sm" fill="soft" class="px-10px !py-10px" (click)="closeCreateSourceModal({ action: 'close' })">
 				<img src="/assets/img/modal-close-icon.svg" class="w-12px h-12px" alt="close icon" />
 			</button>
 
