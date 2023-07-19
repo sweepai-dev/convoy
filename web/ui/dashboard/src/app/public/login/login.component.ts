@@ -9,6 +9,7 @@ import { LoaderModule } from 'src/app/private/components/loader/loader.module';
 import { PrivateService } from 'src/app/private/private.service';
 import { ORGANIZATION_DATA } from 'src/app/models/organisation.model';
 import { PROJECT } from 'src/app/models/project.model';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginComponent implements OnInit {
 	});
 	isLoadingProject = false;
 	organisations?: ORGANIZATION_DATA[];
+	showSignupButton = environment.showSignup;
 
 	constructor(private formBuilder: FormBuilder, public router: Router, private loginService: LoginService, private privateService: PrivateService) {}
 
@@ -40,12 +42,6 @@ export class LoginComponent implements OnInit {
 			localStorage.setItem('CONVOY_AUTH', JSON.stringify(response.data));
 			localStorage.setItem('CONVOY_AUTH_TOKENS', JSON.stringify(response.data.token));
 
-			// get previous location in localstorage
-			// const lastLoacation = localStorage.getItem('CONVOY_LAST_AUTH_LOCATION');
-
-			// check active local project
-			// const localProject = localStorage.getItem('CONVOY_PROJECT');
-			// if (localProject) return lastLoacation ? (location.href = lastLoacation) : this.router.navigate([`/projects/${JSON.parse(localProject).uid}`]);
 			this.isLoadingProject = true;
 			return this.getOrganisations();
 		} catch {
